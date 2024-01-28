@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgba(64,65,79,var(--tw-bg-opacity));
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    margin: auto;
+    padding: 10px;
+    background-color: #333333;
+    border-radius: 5px;
+    margin: 20px auto;
+    width: 400px;
+}
+
+h1 {
+    text-align: center;
+    color: #ffffff;
+}
+
+label {
+    font-weight: bold;
+    color: #ffffff;
+}
+
+textarea {
+    height: 150px;
+    width: 99%;
+    margin-bottom: 10px;
+    padding: 5px;
+    resize: none;
+    border: 1px solid #dddddd;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+button {
+    padding: 5px 10px;
+    margin-top: 5px;
+    background-color: #4CAF50;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Добавленные стили для темного оформления */
+body {
+    background-color: #222222;
+}
+
+.container {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+textarea {
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #dddddd;
+}
+
+button {
+    background-color: #4CAF50;
+    color: #ffffff;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:active {
+    background-color: #40802e;
+}
