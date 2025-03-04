@@ -1,9 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     var fixButton = document.querySelector('button:nth-of-type(1)');
-    var copyButton = document.querySelector('.copy-button');
-
+  
     fixButton.addEventListener('click', fixText);
-    copyButton.addEventListener('click', copyToClipboard);
+   
 });
 
 function fixText() {
@@ -38,23 +37,4 @@ function fixText() {
     }).join(', ');
 
     document.getElementById("output-text").value = outputText;
-}
-
-function copyToClipboard() {
-    var outputText = document.getElementById('output-text').value;
-    var clipboard = new ClipboardJS('.copy-button', {
-        text: function() {
-            return outputText;
-        }
-    });
-
-    clipboard.on('success', function(e) {
-        console.log('Text copied to clipboard: ' + e.text);
-        clipboard.destroy();
-    });
-
-    clipboard.on('error', function(e) {
-        console.error('Failed to copy text to clipboard');
-        clipboard.destroy();
-    });
 }
