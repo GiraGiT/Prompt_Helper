@@ -9,33 +9,34 @@ document.addEventListener('DOMContentLoaded', function() {
 function fixText() {
     var inputText = document.getElementById("input-text").value;
 
-    // 1. Очистка и подготовка данных: удаляем знаки препинания, разделяем на теги и числа
-    var tags = inputText.replace(/[?+–]/g, '').split('\n'); // Предполагаем, что каждый тег с новой строки
-
-    // 2. Создаем массив объектов, где храним тег и его число
+    // 1. Очистка и подготовка данных
+    var tags = inputText.replace(/[?+–]/g, '').split('?'); // Разделяем по символу "?"
     var tagObjects = [];
+
+    // 2. Создание массива объектов с тегами и числами
     for (var i = 0; i < tags.length; i++) {
-        var parts = tags[i].trim().split(' '); // Разделяем тег и число пробелом
-        var tag = parts.slice(0, parts.length - 1).join(' '); // Собираем все части тега обратно, кроме последнего элемента (числа)
-        var count = parseInt(parts[parts.length - 1]); // Преобразуем число в целое
-        if (tag && !isNaN(count)) { // Проверяем, что тег не пустой и число корректное
-            tagObjects.push({tag: tag, count: count});
+        var tag = tags[i].trim();
+        if (tag) { // Проверяем, что тег не пустой
+            var parts = tag.split(' ');
+            var count = parseInt(parts[parts.length - 1]); // Извлекаем число
+
+            if (!isNaN(count)) {
+                var tagName = parts.slice(0, parts.length - 1).join(' '); // Извлекаем имя тега
+                tagObjects.push({tag: tagName, count: count});
+            }
         }
     }
 
-    // 3. Сортируем массив объектов по убыванию числа
+    // 3. Сортировка массива объектов по убыванию числа
     tagObjects.sort(function(a, b) {
         return b.count - a.count;
     });
 
-    // 4. Извлекаем отсортированные теги
-    var sortedTags = [];
-    for (var i = 0; i < tagObjects.length; i++) {
-        sortedTags.push(tagObjects[i].tag);
-    }
+    // 4. Формирование выходной строки
+    var outputText = tagObjects.map(function(item) {
+        return item.tag;
+    }).join(', ');
 
-    // 5. Соединяем теги в строку, разделяя запятыми
-    var outputText = sortedTags.join(', ');
     document.getElementById("output-text").value = outputText;
 }
 
