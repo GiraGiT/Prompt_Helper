@@ -8,14 +8,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function fixText() {
     var inputText = document.getElementById("input-text").value;
-    var tags = inputText.replace(/[?+–]/g, '').replace(/\b\d+\b/g, ',').replace(/ ,/g, ',').split(',');
-    
-    // Удаление лишних пробелов перед каждым тегом
+
+    // 1. Очистка и подготовка данных: удаляем знаки препинания, разделяем на теги и числа
+    var tags = inputText.replace(/[?+–]/g, '').split('\n'); // Предполагаем, что каждый тег с новой строки
+
+    // 2. Создаем массив объектов, где храним тег и его число
+    var tagObjects = [];
     for (var i = 0; i < tags.length; i++) {
-        tags[i] = tags[i].trim();
+        var parts = tags[i].trim().split(' '); // Разделяем тег и число пробелом
+        var tag = parts.slice(0, parts.length - 1).join(' '); // Собираем все части тега обратно, кроме последнего элемента (числа)
+        var count = parseInt(parts[parts.length - 1]); // Преобразуем число в целое
+        if (tag && !isNaN(count)) { // Проверяем, что тег не пустой и число корректное
+            tagObjects.push({tag: tag, count: count});
+        }
     }
-    
-    var outputText = tags.join(', ');
+
+    // 3. Сортируем массив объектов по убыванию числа
+    tagObjects.sort(function(a, b) {
+        return b.count - a.count;
+    });
+
+    // 4. Извлекаем отсортированные теги
+    var sortedTags = [];
+    for (var i = 0; i < tagObjects.length; i++) {
+        sortedTags.push(tagObjects[i].tag);
+    }
+
+    // 5. Соединяем теги в строку, разделяя запятыми
+    var outputText = sortedTags.join(', ');
     document.getElementById("output-text").value = outputText;
 }
 
