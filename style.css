@@ -28,14 +28,14 @@ label {
 }
 
 textarea {
+    font-family: Arial, sans-serif;
     height: 150px;
-    width: 99%;
     margin-bottom: 10px;
     padding: 5px;
     resize: none;
-    border: 1px solid #dddddd;
-    background-color: #ffffff;
-    color: #333333;
+    border: 0px solid #dddddd;
+    background-color: #474747;
+    color: #ffffff;
 }
 
 button {
@@ -62,12 +62,6 @@ body {
     color: #ffffff;
 }
 
-textarea {
-    background-color: #ffffff;
-    color: #333333;
-    border: 1px solid #dddddd;
-}
-
 button {
     background-color: #4CAF50;
     color: #ffffff;
@@ -80,3 +74,78 @@ button:hover {
 button:active {
     background-color: #40802e;
 }
+
+/* === GRID HELPER === */
+#grid-helper {
+  background: var(--card-bg, #1f1f1f);
+  color: var(--text-color, #e6e6e6);
+  font-family: var(--font-main, 'Inter', sans-serif);
+  text-align: center;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  max-width: 800px;
+}
+
+#grid-helper h2 {
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+#grid-helper .description {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.grid-helper-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.grid-helper-controls label {
+  font-size: 0.9rem;
+}
+
+.grid-helper-controls input[type="number"],
+.grid-helper-controls input[type="file"] {
+  background: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+
+.grid-helper-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#gridCanvas {
+  max-width: 100%;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background-color: #474747;
+}
+
+.grid-info {
+margin-top: 10px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: #b5ff9e;
+    text-align: center;
+    font-family: var(--font-main);
+    user-select: none;
+    font-weight: bold;
+}
+
+
