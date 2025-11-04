@@ -1,0 +1,154 @@
+body {
+  background: #202124;
+  color: #fff;
+  font-family: "Segoe UI", sans-serif;
+  padding: 20px;
+}
+
+h1 { text-align: center; margin-bottom: 10px; }
+.desc { text-align: center; color: #bbb; margin-bottom: 20px; }
+
+.builder-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #2a2b30;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+button {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover { background: #43a047; }
+.hidden { display: none; }
+
+/* Live поля */
+.field-live {
+  background: #333;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-live label {
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.field-live .hint-toggle {
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-bottom: 5px;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: underline;
+}
+
+.field-live .hint-text {
+  font-size: 0.85rem;
+  color: #bbb;
+  display: none;
+  margin-bottom: 5px;
+  background: #2a2b30;
+  padding: 5px 8px;
+  border-radius: 4px;
+}
+
+.field-live textarea {
+  background: #444;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  resize: vertical;
+  min-height: 50px;
+}
+
+/* Редактируемые поля */
+.fields-edit .field-edit {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 10px;
+  background: #333;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #444;
+}
+
+.field-edit .drag-handle {
+  width: 8px;
+  background: #444;
+  cursor: grab;
+}
+
+.field-edit .field-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.field-edit input {
+  background: #444;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 8px;
+  margin-bottom: 6px;
+}
+
+.field-edit textarea {
+  background: #555;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px;
+  resize: vertical;
+  min-height: 50px;
+}
+
+.field-edit .field-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #3a3b3f;
+}
+
+.field-edit .field-actions button {
+  background: #d9534f;
+  border-radius: 0;
+  font-size: 14px;
+  padding: 6px;
+}
+
+.field-edit .field-actions button:hover {
+  background: #c9302c;
+}
+
+textarea#result {
+  width: 100%;
+  background: #555;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  min-height: 100px;
+  resize: vertical;
+  margin-top: 10px;
+}

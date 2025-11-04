@@ -10,7 +10,40 @@ let gridColumns = parseInt(colsInput.value, 10);
 imageLoader.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
+  loadImageFile(file);
+});
 
+colsInput.addEventListener("input", () => {
+  const val = parseInt(colsInput.value, 10);
+  if (!isNaN(val) && val > 0) {
+    gridColumns = val;
+    drawGrid();
+  }
+});
+
+// === Drag & Drop поддержка ===
+gridCanvas.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  gridCanvas.classList.add("dragover");
+});
+
+gridCanvas.addEventListener("dragleave", () => {
+  gridCanvas.classList.remove("dragover");
+});
+
+gridCanvas.addEventListener("drop", (e) => {
+  e.preventDefault();
+  gridCanvas.classList.remove("dragover");
+
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith("image/")) {
+    loadImageFile(file);
+  } else {
+    alert("Пожалуйста, перетащите изображение (jpg, png и т.п.)");
+  }
+});
+
+function loadImageFile(file) {
   const reader = new FileReader();
   reader.onload = (event) => {
     gridImage.onload = () => {
@@ -23,15 +56,7 @@ imageLoader.addEventListener("change", (e) => {
     gridImage.src = event.target.result;
   };
   reader.readAsDataURL(file);
-});
-
-colsInput.addEventListener("input", () => {
-  const val = parseInt(colsInput.value, 10);
-  if (!isNaN(val) && val > 0) {
-    gridColumns = val;
-    drawGrid();
-  }
-});
+}
 
 function drawGrid() {
   if (!gridImage.src) return;

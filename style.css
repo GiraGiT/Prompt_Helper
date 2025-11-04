@@ -3,6 +3,7 @@ body {
     background-color: rgba(64,65,79,var(--tw-bg-opacity));
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 .container {
@@ -148,4 +149,43 @@ margin-top: 10px;
     font-weight: bold;
 }
 
+/* === Tabs === */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
 
+.tab-button {
+  padding: 10px 20px;
+  background: #3a3a3a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-weight: bold;
+}
+
+.tab-button:hover {
+  background: #4caf50;
+}
+
+.tab-button.active {
+  background: #45a049;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+#gridCanvas.dragover {
+  border: 2px dashed #4caf50;
+  background-color: rgba(76, 175, 80, 0.1);
+  transition: background 0.3s, border 0.3s;
+}

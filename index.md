@@ -1,50 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Исправление Промпта</title>
-    <link rel="stylesheet" type="text/css" href="style.css?v=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
-    <script src="script.js?v=1.0"></script>
-     <link rel="icon" type="image/png" href="icon.png">
+  <meta charset="UTF-8">
+  <title>Prompt Helper</title>
+  <link rel="stylesheet" href="style.css?v=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+  <script src="script.js?v=1.1"></script>
+  <link rel="icon" type="image/png" href="icon.png">
+  <style>
+    /* Стили вкладок */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .tab-button {
+      padding: 8px 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+    .tab-button.active {
+      background-color: #45a049;
+    }
+    .tab-iframe {
+      width: 100%;
+      min-height: 100vh;
+      border: none;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <h1>Исправление тегов скопированных с сайтов ***booru для составления промптов для stable diffusion</h1>
-    <div class="container">
-        <label for="input-text">Введите текст:</label><br>
-        <textarea id="input-text"></textarea><br>
-        <label for="output-text">Результат:</label><br>
-        <textarea id="output-text" readonly></textarea><br>
-        <button onclick="fixText()">Исправить</button>
-        <button class="copy-button">Копировать</button>
-    </div>
-    <hr>
+  <h1>Prompt Helper</h1>
 
-
-<!-- 🧩 GRID HELPER -->
-<section class="tool-section card" id="grid-helper">
-  <h2>🧩 Grid Helper</h2>
-  <p class="description">
-    Загрузите изображение и укажите количество столбцов — сетка обновится автоматически.
-  </p>
-
-  <div class="grid-helper-controls">
-    <label for="colsInput">Количество столбцов:</label>
-    <input type="number" id="colsInput" min="1" max="100" value="4">
-
-    <label for="imageLoader">Изображение:</label>
-    <input type="file" id="imageLoader" accept="image/*">
+  <!-- Вкладки -->
+  <div class="tabs">
+    <button class="tab-button">Prompt Helper</button>
+    <button class="tab-button">Prompt Builder</button>
+    <button class="tab-button">Grid Helper</button>
   </div>
 
-    <div id="gridInfo" class="grid-info">
-        Размер ячейки: —  
-    </div>
-
-  <div class="grid-helper-preview">
-    <canvas id="gridCanvas"></canvas>
-  </div>
-</section>
-
-
-<script src="grid_helper.js"></script>
+  <!-- Iframes -->
+  <iframe id="prompt-helper-iframe" class="tab-iframe" src="prompt-helper/index.html"></iframe>
+  <iframe id="prompt-builder-iframe" class="tab-iframe" src="prompt-builder/index.html"></iframe>
+  <iframe id="grid-helper-iframe" class="tab-iframe" src="grid-helper/index.html"></iframe>
 </body>
 </html>

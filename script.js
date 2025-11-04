@@ -1,39 +1,44 @@
-document.addEventListener('DOMContentLoaded', function() {
-    var fixButton = document.querySelector('button:nth-of-type(1)');
-    var copyButton = document.querySelector('.copy-button');
+document.addEventListener("DOMContentLoaded", () => {
+  const tabs = document.querySelectorAll(".tab-button");
+  const iframes = document.querySelectorAll(".tab-iframe");
 
-    fixButton.addEventListener('click', fixText);
-    copyButton.addEventListener('click', copyToClipboard);
+  // Открытая вкладка по умолчанию или последняя
+  let activeTab = localStorage.getItem("activeTab") || 0;
+  activateTab(activeTab);
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => {
+      activateTab(index);
+      localStorage.setItem("activeTab", index);
+    });
+  });
+
+  function activateTab(index) {
+    tabs.forEach((t, i) => t.classList.toggle("active", i == index));
+    iframes.forEach((f, i) => f.style.display = i == index ? "block" : "none");
+  }
+
+  // Авто-подстройка высоты iframe
+  const setupIframeAutoHeight = (iframe) => {
+    const adjustHeight = () => {
+      try {
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 20 + "px";
+      } catch(e) {}
+    };
+
+    iframe.addEventListener("load", () => {
+      adjustHeight();
+
+      // MutationObserver для динамического контента
+      const doc = iframe.contentWindow.document;
+      const observer = new MutationObserver(adjustHeight);
+      observer.observe(doc.body, { childList: true, subtree: true, characterData: true });
+
+      // Подстройка при вводе текста
+      doc.addEventListener('input', adjustHeight);
+      doc.addEventListener('change', adjustHeight);
+    });
+  };
+
+  iframes.forEach(iframe => setupIframeAutoHeight(iframe));
 });
-
-function fixText() {
-    var inputText = document.getElementById("input-text").value;
-    var tags = inputText.replace(/[?+–]/g, '').replace(/\b\d+\b/g, ',').replace(/ ,/g, ',').split(',');
-    
-    // Удаление лишних пробелов перед каждым тегом
-    for (var i = 0; i < tags.length; i++) {
-        tags[i] = tags[i].trim();
-    }
-    
-    var outputText = tags.join(', ');
-    document.getElementById("output-text").value = outputText;
-}
-
-function copyToClipboard() {
-    var outputText = document.getElementById('output-text').value;
-    var clipboard = new ClipboardJS('.copy-button', {
-        text: function() {
-            return outputText;
-        }
-    });
-
-    clipboard.on('success', function(e) {
-        console.log('Text copied to clipboard: ' + e.text);
-        clipboard.destroy();
-    });
-
-    clipboard.on('error', function(e) {
-        console.error('Failed to copy text to clipboard');
-        clipboard.destroy();
-    });
-}
