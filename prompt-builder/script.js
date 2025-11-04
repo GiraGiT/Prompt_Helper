@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Рендер live-полей
   const renderLiveFields = () => {
     liveContainer.innerHTML = "";
+    const textareas = [];
+
     fieldsData.forEach((f, index) => {
       const div = document.createElement("div");
       div.className = "field-live";
@@ -48,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const toggle = div.querySelector(".hint-toggle");
       const hintText = div.querySelector(".hint-text");
 
-      // Инициализация display
       hintText.style.display = "none";
 
       textarea.addEventListener("input", e => {
@@ -64,10 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
         toggle.textContent = isHidden ? "Скрыть подсказку" : "Показать подсказку";
       });
 
-      autoResizeTextarea(textarea);
       liveContainer.appendChild(div);
+      textareas.push(textarea);
     });
 
+    // Подстроить высоту всех textarea после вставки в DOM
+    textareas.forEach(autoResizeTextarea);
     autoResizeTextarea(resultArea);
   };
 
