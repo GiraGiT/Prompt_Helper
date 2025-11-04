@@ -189,3 +189,7 @@ margin-top: 10px;
   background-color: rgba(76, 175, 80, 0.1);
   transition: background 0.3s, border 0.3s;
 }
+
+.container-lg {
+      width: 100%;
+}
