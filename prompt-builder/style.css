@@ -142,13 +142,15 @@ button:hover { background: #43a047; }
 }
 
 textarea#result {
-  width: 100%;
+  width: auto;
   background: #555;
   color: #fff;
   border: none;
   border-radius: 6px;
   padding: 10px;
   min-height: 100px;
-  resize: vertical;
+  resize: none; /* отключаем ручное изменение размера */
+  overflow: hidden; /* чтобы скролл не появлялся */
   margin-top: 10px;
+  transition: height 0.1s; /* плавное изменение высоты */
 }
