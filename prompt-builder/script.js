@@ -32,11 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
     textarea.style.height = textarea.scrollHeight + "px";
   };
 
-  // Рендер live-полей
+  // ------------------- Live-поля -------------------
   const renderLiveFields = () => {
     liveContainer.innerHTML = "";
-    const textareas = [];
-
     fieldsData.forEach((f, index) => {
       const div = document.createElement("div");
       div.className = "field-live";
@@ -60,24 +58,23 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       toggle.addEventListener("click", () => {
-        const isHidden = hintText.style.display === "none" || hintText.style.display === "";
+        const isHidden = hintText.style.display === "none";
         hintText.style.display = isHidden ? "block" : "none";
         toggle.textContent = isHidden ? "Скрыть подсказку" : "Показать подсказку";
       });
 
+      autoResizeTextarea(textarea);
       liveContainer.appendChild(div);
-      textareas.push(textarea);
     });
 
-    // Подстроить высоту всех textarea после вставки в DOM
-    textareas.forEach(autoResizeTextarea);
     autoResizeTextarea(resultArea);
   };
 
+  // ------------------- Итоговый промпт -------------------
   const updatePrompt = () => {
     let result = "";
     fieldsData.forEach(f => {
-      if (!f[2] || !f[4]) return; // игнорируем поле, если галочка "Добавлять в итоговый промпт" отключена
+      if (!f[2] || !f[4]) return;
       result += f[2].trim() + ",";
       result += f[3] ? "\n" : " ";
     });
@@ -85,11 +82,11 @@ document.addEventListener("DOMContentLoaded", () => {
     autoResizeTextarea(resultArea);
   };
 
-  // Рендер редактируемых полей
+  // ------------------- Редактируемые поля -------------------
   const renderEditFields = () => {
     editContainer.innerHTML = "";
 
-    // Панель управления полями
+    // Панель инструментов
     const toolbar = document.createElement("div");
     toolbar.className = "edit-toolbar";
     toolbar.innerHTML = `
@@ -100,6 +97,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const addFieldBtn = toolbar.querySelector("#add-field");
     const resetFieldsBtn = toolbar.querySelector("#reset-fields");
+
+    // Контейнер для редактируемых полей
+    const fieldsWrapper = document.createElement("div");
+    fieldsWrapper.id = "edit-fields-wrapper";
+    editContainer.appendChild(fieldsWrapper);
 
     addFieldBtn.addEventListener("click", () => {
       fieldsData.push(["Новая категория","", "", true, true]);
@@ -115,12 +117,11 @@ document.addEventListener("DOMContentLoaded", () => {
       saveFields();
     });
 
-    // Поля
     fieldsData.forEach((f, index) => {
       const div = document.createElement("div");
       div.className = "field-edit";
       div.innerHTML = `
-        <div class="drag-handle"></div>
+        <div class="drag-handle">≡≡≡≡</div>
         <div class="field-content">
           <input type="text" value="${f[0]}" placeholder="Название поля">
           <textarea placeholder="Подсказка">${f[1]}</textarea>
@@ -135,6 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <button class="remove-btn">✖</button>
         </div>
       `;
+
       const input = div.querySelector("input[type=text]");
       const textarea = div.querySelector("textarea");
       const checkboxNewLine = div.querySelectorAll("input[type=checkbox]")[0];
@@ -156,10 +158,32 @@ document.addEventListener("DOMContentLoaded", () => {
         saveFields();
       });
 
-      editContainer.appendChild(div);
+      fieldsWrapper.appendChild(div);
+      autoResizeTextarea(textarea);
     });
+
+    // Drag & Drop
+    if (!fieldsWrapper.sortable) {
+      fieldsWrapper.sortable = new Sortable(fieldsWrapper, {
+        handle: ".drag-handle",
+        animation: 150,
+        onEnd: () => {
+          fieldsData = [...fieldsWrapper.querySelectorAll(".field-edit")].map(div => {
+            const input = div.querySelector("input[type=text]");
+            const textarea = div.querySelector("textarea");
+            const checkboxNewLine = div.querySelectorAll("input[type=checkbox]")[0];
+            const checkboxInclude = div.querySelectorAll("input[type=checkbox]")[1];
+            return [input.value, textarea.value, "", checkboxNewLine.checked, checkboxInclude.checked];
+          });
+          renderLiveFields();
+          updatePrompt();
+          saveFields();
+        }
+      });
+    }
   };
 
+  // ------------------- Кнопка редактирования -------------------
   editModeBtn.addEventListener("click", () => {
     if (editContainer.classList.contains("hidden")) {
       editContainer.classList.remove("hidden");
@@ -176,26 +200,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Drag & Drop
-  new Sortable(editContainer, {
-    handle: ".drag-handle",
-    animation: 150,
-    onEnd: () => {
-      fieldsData = [...editContainer.querySelectorAll(".field-edit")].map(div => {
-        const input = div.querySelector("input[type=text]");
-        const textarea = div.querySelector("textarea");
-        const checkboxNewLine = div.querySelectorAll("input[type=checkbox]")[0];
-        const checkboxInclude = div.querySelectorAll("input[type=checkbox]")[1];
-        return [input.value, textarea.value, "", checkboxNewLine.checked, checkboxInclude.checked];
-      });
-      renderLiveFields();
-      updatePrompt();
-      saveFields();
-    }
-  });
-
+  // ------------------- Clipboard -------------------
   new ClipboardJS("#copy-btn", { text: () => resultArea.value });
 
+  // ------------------- Инициализация -------------------
   renderLiveFields();
   updatePrompt();
 });

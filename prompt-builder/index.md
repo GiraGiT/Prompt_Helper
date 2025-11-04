@@ -10,6 +10,7 @@
   <p class="desc">Заполняйте поля для генерации промпта. Нажмите "Редактировать поля", чтобы управлять структурой.</p>
 
   <div class="builder-container">
+    <!-- Панель инструментов -->
     <div class="toolbar">
       <button id="edit-mode-btn">✏️ Редактировать поля</button>
       <button id="copy-btn">📋 Копировать результат</button>
@@ -21,17 +22,12 @@
     <!-- Режим редактирования -->
     <div id="edit-fields-container" class="hidden"></div>
 
-    
+    <!-- Итоговый промпт -->
     <div class="field-live">
       <label for="result">Итоговый промпт:</label>
       <textarea id="result" readonly></textarea>
     </div>
   </div>
-
-    <div class="builder-container">
-    <div class="toolbar">
-      <button id="copy-btn">📋 Копировать результат</button>
-    </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
