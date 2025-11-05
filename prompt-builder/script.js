@@ -4,10 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const editModeBtn = document.getElementById("edit-mode-btn");
   const resultArea = document.getElementById("result");
 
+  let defaultFields = [];
   let fieldsData = [];
-  let fieldsDataDefault = [];
-
-  const saveFields = () => localStorage.setItem("promptBuilderFields", JSON.stringify(fieldsData));
 
   // ------------------- Автоподстройка textarea -------------------
   const autoResizeTextarea = (textarea) => {
@@ -27,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
       autoResizeTextarea(textarea);
     });
   };
+
+  // ------------------- Сохранение в localStorage -------------------
+  const saveFields = () => localStorage.setItem("promptBuilderFields", JSON.stringify(fieldsData));
 
   // ------------------- Live-поля -------------------
   const renderLiveFields = () => {
@@ -112,16 +113,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ---------------- Сброс ----------------
     resetFieldsBtn.addEventListener("click", () => {
-      if (fieldsDataDefault.length) {
-        fieldsData = JSON.parse(JSON.stringify(fieldsDataDefault));
-        renderEditFields();
-        renderLiveFields();
-        updatePrompt();
-        saveFields();
-        initAutoResizeAll();
-      } else {
-        alert("Default шаблон не загружен. Перезагрузите страницу и выберите файл JSON.");
-      }
+      fieldsData = JSON.parse(JSON.stringify(defaultFields));
+      renderEditFields();
+      renderLiveFields();
+      updatePrompt();
+      saveFields();
+      initAutoResizeAll();
     });
 
     // ---------------- Экспорт ----------------
@@ -247,50 +244,18 @@ document.addEventListener("DOMContentLoaded", () => {
   // ------------------- Clipboard -------------------
   new ClipboardJS("#copy-btn", { text: () => resultArea.value });
 
-  // ------------------- Загрузка default JSON при старте -------------------
-  const loadDefaultTemplate = () => {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = ".json";
-    fileInput.style.display = "none";
-    document.body.appendChild(fileInput);
-
-    fileInput.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result);
-          if (!Array.isArray(data)) throw new Error("Неверный формат JSON");
-          fieldsData = data;
-          fieldsDataDefault = JSON.parse(JSON.stringify(data));
-          saveFields();
-          renderLiveFields();
-          updatePrompt();
-          initAutoResizeAll();
-        } catch (err) {
-          alert("Ошибка загрузки default JSON: " + err.message);
-        }
-      };
-      reader.readAsText(file);
-      fileInput.remove();
+  // ------------------- Загрузка default JSON -------------------
+  fetch("prompt-builder-template-default.json")
+    .then(r => r.json())
+    .then(data => {
+      defaultFields = JSON.parse(JSON.stringify(data));
+      fieldsData = JSON.parse(localStorage.getItem("promptBuilderFields")) || JSON.parse(JSON.stringify(defaultFields));
+      renderLiveFields();
+      updatePrompt();
+      initAutoResizeAll();
+    })
+    .catch(() => {
+      alert("Ошибка загрузки default JSON. Проверьте файл в папке.");
     });
 
-    fileInput.click();
-  };
-
-  // ------------------- Инициализация -------------------
-  const stored = localStorage.getItem("promptBuilderFields");
-  if (stored) {
-    fieldsData = JSON.parse(stored);
-    fieldsDataDefault = JSON.parse(JSON.stringify(fieldsData));
-    renderLiveFields();
-    updatePrompt();
-    initAutoResizeAll();
-  } else {
-    loadDefaultTemplate();
-  }
-
-  window.addEventListener("load", () => initAutoResizeAll());
 });
