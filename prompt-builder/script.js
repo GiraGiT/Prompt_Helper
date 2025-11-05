@@ -4,32 +4,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const editModeBtn = document.getElementById("edit-mode-btn");
   const resultArea = document.getElementById("result");
 
-  const defaultFields = [
-    ["Кто", "Тип персонажа, возраст, гендер", "", true, true],
-    ["Внешность / стиль", "Цвет волос, глаза, особенности", "", true, true],
-    ["Одежда / аксессуары", "Одежда, украшения, фетиши", "", true, true],
-    ["Фон / окружение", "Комната, пейзаж, окружение", "", true, true],
-    ["Атмосфера / освещение", "Настроение, тип освещения", "", true, true],
-    ["Стилизация / техника", "Аниме стиль, художник, жанр", "", true, true],
-    ["Композиция / ракурс", "Камера, фокус, перспектива", "", true, true],
-    ["Качество / разрешение", "Детализация, итоговый вид", "", true, true],
-    ["Персонаж", "LORA персонажа", "", true, true],
-    ["🔞 NSFW теги (опц.)", "Только если нужна NSFW сцена", "", true, true],
-    ["Embendings", "Дополнения", "", true, true],
-    ["Пакет из LORA", "Все LORA, что могут использоваться в генерации", "", true, true],
-    ["Negative prompt", "Что исключить", "lazyneg, worst quality, normal quality, anatomical nonsense, bad anatomy, interlocked fingers, extra fingers, watermark, transparent, low quality, logo,text, signature, missing fingers, extra fingers, extra toes, missing toes, shiny skin, glistening_clothing, shiny clothes, blurry, blurry text, distorted letters, incorrect spelling, latin alphabet, extra words, bad typography, misspelled,", true, false],
-    ["ADetailer hands negative", "", "face, eyes, person, extra limbs, mutated hands, extra fingers,", true, false],
-    ["ADetailer hands positive", "", "<lora:detailed hand focus style illustriousXL v1.1:0.8>,", true, false],
-    ["ADetailer face positive", "", "cute face, perfect face, large magenta eyes, gradient eyes, slit pupils, blush, teeth, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,", true, false],
-  ];
-
-  let fieldsData = JSON.parse(localStorage.getItem("promptBuilderFields")) || JSON.parse(JSON.stringify(defaultFields));
+  let fieldsData = [];
+  let fieldsDataDefault = [];
 
   const saveFields = () => localStorage.setItem("promptBuilderFields", JSON.stringify(fieldsData));
 
+  // ------------------- Автоподстройка textarea -------------------
   const autoResizeTextarea = (textarea) => {
     textarea.style.height = "auto";
-    textarea.style.height = textarea.scrollHeight + "px";
+    const newHeight = textarea.scrollHeight;
+    textarea.style.height = `${newHeight}px`;
+  };
+
+  const initAutoResizeAll = () => {
+    const allTextareas = document.querySelectorAll("textarea");
+    allTextareas.forEach(textarea => {
+      textarea.style.transition = "height 0.12s ease";
+      textarea.removeEventListener("input", textarea._autoResizeHandler || (() => {}));
+      const handler = () => autoResizeTextarea(textarea);
+      textarea._autoResizeHandler = handler;
+      textarea.addEventListener("input", handler);
+      autoResizeTextarea(textarea);
+    });
   };
 
   // ------------------- Live-поля -------------------
@@ -63,10 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
         toggle.textContent = isHidden ? "Скрыть подсказку" : "Показать подсказку";
       });
 
-      autoResizeTextarea(textarea);
       liveContainer.appendChild(div);
     });
 
+    initAutoResizeAll();
     autoResizeTextarea(resultArea);
   };
 
@@ -86,37 +82,84 @@ document.addEventListener("DOMContentLoaded", () => {
   const renderEditFields = () => {
     editContainer.innerHTML = "";
 
-    // Панель инструментов
     const toolbar = document.createElement("div");
     toolbar.className = "edit-toolbar";
     toolbar.innerHTML = `
       <button id="add-field">➕ Добавить поле</button>
       <button id="reset-fields">♻ Сбросить поля</button>
+      <button id="export-template">💾 Экспорт шаблона</button>
+      <button id="import-template">📂 Импорт шаблона</button>
+      <input type="file" id="import-file" style="display:none" accept=".json">
     `;
     editContainer.appendChild(toolbar);
 
     const addFieldBtn = toolbar.querySelector("#add-field");
     const resetFieldsBtn = toolbar.querySelector("#reset-fields");
+    const exportBtn = toolbar.querySelector("#export-template");
+    const importBtn = toolbar.querySelector("#import-template");
+    const importFileInput = toolbar.querySelector("#import-file");
 
-    // Контейнер для редактируемых полей
     const fieldsWrapper = document.createElement("div");
     fieldsWrapper.id = "edit-fields-wrapper";
     editContainer.appendChild(fieldsWrapper);
 
+    // ---------------- Добавление поля ----------------
     addFieldBtn.addEventListener("click", () => {
-      fieldsData.push(["Новая категория","", "", true, true]);
+      fieldsData.push(["Новая категория", "", "", true, true]);
       renderEditFields();
       saveFields();
     });
 
+    // ---------------- Сброс ----------------
     resetFieldsBtn.addEventListener("click", () => {
-      fieldsData = JSON.parse(JSON.stringify(defaultFields));
-      renderEditFields();
-      renderLiveFields();
-      updatePrompt();
-      saveFields();
+      if (fieldsDataDefault.length) {
+        fieldsData = JSON.parse(JSON.stringify(fieldsDataDefault));
+        renderEditFields();
+        renderLiveFields();
+        updatePrompt();
+        saveFields();
+        initAutoResizeAll();
+      } else {
+        alert("Default шаблон не загружен. Перезагрузите страницу и выберите файл JSON.");
+      }
     });
 
+    // ---------------- Экспорт ----------------
+    exportBtn.addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(fieldsData, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "prompt-builder-template.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // ---------------- Импорт ----------------
+    importBtn.addEventListener("click", () => importFileInput.click());
+    importFileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const imported = JSON.parse(reader.result);
+          if (!Array.isArray(imported)) throw new Error("Неверный формат файла");
+          fieldsData = imported;
+          renderEditFields();
+          renderLiveFields();
+          updatePrompt();
+          saveFields();
+          initAutoResizeAll();
+        } catch (err) {
+          alert("Ошибка при импорте шаблона: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+      importFileInput.value = "";
+    });
+
+    // ---------------- Генерация полей редактирования ----------------
     fieldsData.forEach((f, index) => {
       const div = document.createElement("div");
       div.className = "field-edit";
@@ -136,7 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
           <button class="remove-btn">✖</button>
         </div>
       `;
-
       const input = div.querySelector("input[type=text]");
       const textarea = div.querySelector("textarea");
       const checkboxNewLine = div.querySelectorAll("input[type=checkbox]")[0];
@@ -147,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
       checkboxInclude.checked = f[4];
 
       input.addEventListener("input", e => { f[0] = e.target.value; saveFields(); });
-      textarea.addEventListener("input", e => { f[1] = e.target.value; saveFields(); });
+      textarea.addEventListener("input", e => { f[1] = e.target.value; saveFields(); autoResizeTextarea(e.target); });
       checkboxNewLine.addEventListener("change", e => { f[3] = e.target.checked; saveFields(); });
       checkboxInclude.addEventListener("change", e => { f[4] = e.target.checked; updatePrompt(); saveFields(); });
       removeBtn.addEventListener("click", () => {
@@ -162,7 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
       autoResizeTextarea(textarea);
     });
 
-    // Drag & Drop
+    // ---------------- Drag & Drop ----------------
     if (!fieldsWrapper.sortable) {
       fieldsWrapper.sortable = new Sortable(fieldsWrapper, {
         handle: ".drag-handle",
@@ -178,6 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
           renderLiveFields();
           updatePrompt();
           saveFields();
+          initAutoResizeAll();
         }
       });
     }
@@ -197,13 +240,57 @@ document.addEventListener("DOMContentLoaded", () => {
       renderLiveFields();
       updatePrompt();
       saveFields();
+      initAutoResizeAll();
     }
   });
 
   // ------------------- Clipboard -------------------
   new ClipboardJS("#copy-btn", { text: () => resultArea.value });
 
+  // ------------------- Загрузка default JSON при старте -------------------
+  const loadDefaultTemplate = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = ".json";
+    fileInput.style.display = "none";
+    document.body.appendChild(fileInput);
+
+    fileInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (!Array.isArray(data)) throw new Error("Неверный формат JSON");
+          fieldsData = data;
+          fieldsDataDefault = JSON.parse(JSON.stringify(data));
+          saveFields();
+          renderLiveFields();
+          updatePrompt();
+          initAutoResizeAll();
+        } catch (err) {
+          alert("Ошибка загрузки default JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+      fileInput.remove();
+    });
+
+    fileInput.click();
+  };
+
   // ------------------- Инициализация -------------------
-  renderLiveFields();
-  updatePrompt();
+  const stored = localStorage.getItem("promptBuilderFields");
+  if (stored) {
+    fieldsData = JSON.parse(stored);
+    fieldsDataDefault = JSON.parse(JSON.stringify(fieldsData));
+    renderLiveFields();
+    updatePrompt();
+    initAutoResizeAll();
+  } else {
+    loadDefaultTemplate();
+  }
+
+  window.addEventListener("load", () => initAutoResizeAll());
 });

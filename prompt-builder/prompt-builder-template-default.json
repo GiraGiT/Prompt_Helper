@@ -1,0 +1,114 @@
+[
+  [
+    "Кто",
+    "Тип персонажа, возраст, гендер",
+    "",
+    true,
+    true
+  ],
+  [
+    "Внешность / стиль",
+    "Цвет волос, глаза, особенности",
+    "",
+    true,
+    true
+  ],
+  [
+    "Одежда / аксессуары",
+    "Одежда, украшения, фетиши",
+    "",
+    true,
+    true
+  ],
+  [
+    "Фон / окружение",
+    "Комната, пейзаж, окружение",
+    "",
+    true,
+    true
+  ],
+  [
+    "Атмосфера / освещение",
+    "Настроение, тип освещения",
+    "",
+    true,
+    true
+  ],
+  [
+    "Стилизация / техника",
+    "Аниме стиль, художник, жанр",
+    "",
+    true,
+    true
+  ],
+  [
+    "Композиция / ракурс",
+    "Камера, фокус, перспектива",
+    "",
+    true,
+    true
+  ],
+  [
+    "Качество / разрешение",
+    "Детализация, итоговый вид",
+    "",
+    true,
+    true
+  ],
+  [
+    "Персонаж",
+    "LORA персонажа",
+    "",
+    true,
+    true
+  ],
+  [
+    "🔞 NSFW теги (опц.)",
+    "Только если нужна NSFW сцена",
+    "",
+    true,
+    true
+  ],
+  [
+    "Embendings",
+    "Дополнения",
+    "",
+    true,
+    true
+  ],
+  [
+    "Пакет из LORA",
+    "Все LORA, что могут использоваться в генерации",
+    "<lora:69yottea_illu_v2:0.39>, 69yottea_style_illu,\n<lora:WSSKX_WAI:0.3>,\n<lora:748cm_illu:0.4>, 7481llu,\n<lora:ppw_v8_Illuv2stable_128:0.5>,\n\n<lora:Smooth_Booster:0.1>,\n<lora:s41l0rm00nXLP_r1:0.2>, s41l0rm00n, retro artstyle,\n<lora:Gurren_Lagan_Eyecatch_2:0.4>, GurLagCatch,\n<lora:DynamicPoseIL2att_alpha1.0_rank4_noxattn_900steps:1.35>, dynamic pose, foreshortening, extreme perspective",
+    true,
+    true
+  ],
+  [
+    "Negative prompt",
+    "Что исключить",
+    "lazyneg, worst quality, normal quality, anatomical nonsense, bad anatomy, interlocked fingers, extra fingers, watermark, transparent, low quality, logo,text, signature, missing fingers, extra fingers, extra toes, missing toes, shiny skin, glistening_clothing, shiny clothes, blurry, blurry text, distorted letters, incorrect spelling, latin alphabet, extra words, bad typography, misspelled,",
+    true,
+    false
+  ],
+  [
+    "ADetailer hands negative",
+    "",
+    "face, eyes, person, extra limbs, mutated hands, extra fingers,",
+    true,
+    false
+  ],
+  [
+    "ADetailer hands positive",
+    "",
+    "<lora:detailed hand focus style illustriousXL v1.1:0.8>,",
+    true,
+    false
+  ],
+  [
+    "ADetailer face positive",
+    "",
+    "cute face, perfect face, large magenta eyes, gradient eyes, slit pupils, blush, teeth, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
+    true,
+    false
+  ]
+]
