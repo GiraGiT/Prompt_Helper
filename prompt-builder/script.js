@@ -10,14 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // ------------------- Автоподстройка textarea -------------------
   const autoResizeTextarea = (textarea) => {
     textarea.style.height = "auto";
-    const newHeight = textarea.scrollHeight;
-    textarea.style.height = `${newHeight}px`;
+    textarea.style.height = textarea.scrollHeight + "px";
   };
 
   const initAutoResizeAll = () => {
-    const allTextareas = document.querySelectorAll("textarea");
-    allTextareas.forEach(textarea => {
-      textarea.style.transition = "height 0.12s ease";
+    document.querySelectorAll("textarea").forEach(textarea => {
       textarea.removeEventListener("input", textarea._autoResizeHandler || (() => {}));
       const handler = () => autoResizeTextarea(textarea);
       textarea._autoResizeHandler = handler;
@@ -26,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  // ------------------- Сохранение в localStorage -------------------
+  // ------------------- Сохранение -------------------
   const saveFields = () => localStorage.setItem("promptBuilderFields", JSON.stringify(fieldsData));
 
   // ------------------- Live-поля -------------------
@@ -48,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hintText.style.display = "none";
 
       textarea.addEventListener("input", e => {
-        fieldsData[index][2] = e.target.value;
+        fieldsData[index][2] = e.target.value; // сохраняем только текст пользователя
         updatePrompt();
         saveFields();
         autoResizeTextarea(e.target);
@@ -72,13 +69,20 @@ document.addEventListener("DOMContentLoaded", () => {
     let result = "";
     fieldsData.forEach(f => {
       if (!f[2] || !f[4]) return;
-      let text = f[2].trim();
 
-      // Если текст не заканчивается на запятую, добавляем запятую
-      if (text && text.slice(-1) !== ",") text += ",";
+      const lines = f[2].split(/\r?\n/);
+      const processedLines = lines.map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return "";
+        return trimmed.endsWith(",") ? trimmed : trimmed + ",";
+      });
 
-      // Поддержка абзацев: если нужно новая строка
-      result += f[3] ? text + "\n" : text + " ";
+      if (f[3]) {
+        result += processedLines.join("\n") + "\n";
+      } else {
+        const nonEmpty = processedLines.filter(l => l !== "");
+        result += nonEmpty.join(" ") + " ";
+      }
     });
     resultArea.value = result.trim();
     autoResizeTextarea(resultArea);
@@ -139,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ---------------- Импорт ----------------
     importBtn.addEventListener("click", () => importFileInput.click());
-    importFileInput.addEventListener("change", (e) => {
+    importFileInput.addEventListener("change", e => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
@@ -169,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="drag-handle">≡≡≡≡</div>
         <div class="field-content">
           <input type="text" value="${f[0]}" placeholder="Название поля">
-          <textarea placeholder="Подсказка">${f[1]}</textarea>
+          <textarea placeholder="${f[1]}">${f[2]}</textarea>
           <label style="font-size:0.85rem; margin-top:5px;">
             <input type="checkbox"> Начинать с новой строки
           </label>
@@ -191,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
       checkboxInclude.checked = f[4];
 
       input.addEventListener("input", e => { f[0] = e.target.value; saveFields(); });
-      textarea.addEventListener("input", e => { f[1] = e.target.value; saveFields(); autoResizeTextarea(e.target); });
+      textarea.addEventListener("input", e => { f[2] = e.target.value; saveFields(); autoResizeTextarea(e.target); });
       checkboxNewLine.addEventListener("change", e => { f[3] = e.target.checked; saveFields(); });
       checkboxInclude.addEventListener("change", e => { f[4] = e.target.checked; updatePrompt(); saveFields(); });
       removeBtn.addEventListener("click", () => {
@@ -212,13 +216,21 @@ document.addEventListener("DOMContentLoaded", () => {
         handle: ".drag-handle",
         animation: 150,
         onEnd: () => {
-          fieldsData = [...fieldsWrapper.querySelectorAll(".field-edit")].map(div => {
+          const newFieldsData = [];
+          [...fieldsWrapper.querySelectorAll(".field-edit")].forEach(div => {
             const input = div.querySelector("input[type=text]");
             const textarea = div.querySelector("textarea");
             const checkboxNewLine = div.querySelectorAll("input[type=checkbox]")[0];
             const checkboxInclude = div.querySelectorAll("input[type=checkbox]")[1];
-            return [input.value, textarea.value, "", checkboxNewLine.checked, checkboxInclude.checked];
+            newFieldsData.push([
+              input.value,
+              textarea.placeholder, // подсказка остаётся
+              textarea.value,       // пользовательский текст сохраняется
+              checkboxNewLine.checked,
+              checkboxInclude.checked
+            ]);
           });
+          fieldsData = newFieldsData;
           renderLiveFields();
           updatePrompt();
           saveFields();
