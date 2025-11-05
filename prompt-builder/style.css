@@ -4,10 +4,8 @@ body {
   font-family: "Segoe UI", sans-serif;
   padding: 20px;
 }
-
 h1 { text-align: center; margin-bottom: 10px; }
 .desc { text-align: center; color: #bbb; margin-bottom: 20px; }
-
 .builder-container {
   max-width: 900px;
   margin: 0 auto;
@@ -15,14 +13,12 @@ h1 { text-align: center; margin-bottom: 10px; }
   padding: 20px;
   border-radius: 10px;
 }
-
 .toolbar {
   display: flex;
   justify-content: center;
   gap: 10px;
   margin-bottom: 20px;
 }
-
 button {
   background: #4caf50;
   color: #fff;
@@ -32,7 +28,6 @@ button {
   cursor: pointer;
   transition: 0.2s;
 }
-
 button:hover { background: #43a047; }
 .hidden { display: none; }
 
@@ -44,13 +39,9 @@ button:hover { background: #43a047; }
   margin-bottom: 8px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
-
-.field-live label {
-  font-weight: bold;
-  margin-bottom: 3px;
-}
-
+.field-live label { font-weight: bold; margin-bottom: 3px; }
 .field-live .hint-toggle {
   font-size: 0.85rem;
   color: #aaa;
@@ -59,7 +50,6 @@ button:hover { background: #43a047; }
   user-select: none;
   text-decoration: underline;
 }
-
 .field-live .hint-text {
   font-size: 0.85rem;
   color: #bbb;
@@ -69,85 +59,67 @@ button:hover { background: #43a047; }
   padding: 5px 8px;
   border-radius: 4px;
 }
-
 .field-live textarea {
   background: #444;
   color: #fff;
   border: none;
   border-radius: 4px;
-  padding: 8px 8px 0px 8px;
+  padding: 8px;
   resize: vertical;
+  min-height: 60px;
+  font-size: 14px;
+  line-height: 1.2;
 }
 
-/* Редактируемые поля */
+/* Edit поля */
 .fields-edit .field-edit {
   display: flex;
   align-items: stretch;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  margin-top: 10px;
   background: #333;
   border-radius: 6px;
   overflow: hidden;
   border: 1px solid #444;
+  flex-direction: column;
 }
-
-.field-edit {
-  margin-top: 20px !important;
-}
-
 .field-edit .drag-handle {
-    width: 96%;
-    height: 40px;
-    background: #444;
-    cursor: grab;
-    align-items: center;
-    padding: 10px 0px 0px 20px;
-    font-size: 16pt;
-    text-align: center;
-    margin-left: 8px;
+  width: 96%;
+  height: 40px;
+  background: #444;
+  cursor: grab;
+  align-items: center;
+  padding: 10px 0 0 20px;
+  font-size: 16pt;
+  text-align: center;
+  margin-left: 8px;
 }
-
 .field-edit .field-content {
   flex: 1;
   display: flex;
   flex-direction: column;
   padding: 10px;
 }
-
-.field-edit input {
-  background: #444;
+.field-edit input, .field-edit textarea {
+  background: #555;
   color: #fff;
   border: none;
   border-radius: 4px;
   padding: 5px 8px;
   margin-bottom: 6px;
 }
-
-.field-edit textarea {
-  background: #555;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 8px;
-  resize: vertical;
-}
-
 .field-edit .field-actions {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   background: #3a3b3f;
 }
-
 .field-edit .field-actions button {
   background: #d9534f;
   border-radius: 0;
   font-size: 14px;
   padding: 6px;
 }
-
-.field-edit .field-actions button:hover {
-  background: #c9302c;
-}
+.field-edit .field-actions button:hover { background: #c9302c; }
 
 textarea#result {
   width: auto;
@@ -156,8 +128,66 @@ textarea#result {
   border: none;
   border-radius: 6px;
   padding: 10px;
-  resize: none; /* отключаем ручное изменение размера */
-  overflow: hidden; /* чтобы скролл не появлялся */
+  resize: none;
+  overflow: hidden;
   margin-top: 10px;
-  transition: height 0.1s; /* плавное изменение высоты */
+  transition: height 0.1s;
+}
+
+textarea::placeholder { color: #888; }
+
+.autocomplete-list {
+  position: absolute;
+  top: 100%; /* прямо под полем */
+  left: 0;
+  width: 100%; /* ширина под поле */
+  max-width: 350px; /* не растягиваем слишком */
+  background-color: #2a2b30; /* основной цвет контейнера */
+  border: 1px solid #444;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  font-family: inherit;
+  font-size: 14px;
+  color: #fff;
+  z-index: 1000;
+  overflow-y: auto;
+  max-height: 180px;
+  display: none;
+}
+
+.autocomplete-item {
+  padding: 6px 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.active {
+  background-color: #3a3b3f; /* темнее, мягкий ховер */
+}
+
+.autocomplete-item .match {
+  font-weight: bold;
+  color: #ffd966; /* мягкий акцент, хорошо читается на темном фоне */
+}
+
+.autocomplete-item .info {
+  color: #aaa;
+  font-size: 12px;
+  margin-left: 5px;
+  white-space: nowrap;
+}
+
+#edit-fields-container > div.edit-toolbar {
+    display: flex;
+    width: 80%;
+    margin: auto;
+    justify-content: space-around;
+}
+
+#edit-fields-wrapper {
+      margin: 15px 0px 0px 0px;
 }
