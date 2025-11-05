@@ -72,8 +72,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let result = "";
     fieldsData.forEach(f => {
       if (!f[2] || !f[4]) return;
-      result += f[2].trim() + ",";
-      result += f[3] ? "\n" : " ";
+      let text = f[2].trim();
+
+      // Если текст не заканчивается на запятую, добавляем запятую
+      if (text && text.slice(-1) !== ",") text += ",";
+
+      // Поддержка абзацев: если нужно новая строка
+      result += f[3] ? text + "\n" : text + " ";
     });
     resultArea.value = result.trim();
     autoResizeTextarea(resultArea);
@@ -257,5 +262,4 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(() => {
       alert("Ошибка загрузки default JSON. Проверьте файл в папке.");
     });
-
 });
