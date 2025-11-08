@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
           return {tag,popularity,aliases};
         }).filter(Boolean);
       tagList.sort((a,b)=>(b.popularity||0)-(a.popularity||0));
-      console.log("Tags loaded:", tagList.length);
     }).catch(err=>{ console.warn("Не удалось загрузить tags.csv:", err); tagList=[]; });
 
   // ------------------- Auto-resize -------------------
@@ -53,15 +52,40 @@ document.addEventListener("DOMContentLoaded", () => {
   // ------------------- Save/load -------------------
   const saveFields=()=>localStorage.setItem("promptBuilderFields",JSON.stringify(fieldsData));
 
+  // ------------------- Insert Tag (replaces token) -------------------
+  function insertTagReplacingToken(textarea, tag) {
+    const pos = textarea.selectionStart;
+    const val = textarea.value;
+
+    // Найти токен до курсора (от пробела или запятой)
+    const beforeCursor = val.slice(0, pos);
+    const tokenMatch = beforeCursor.match(/[\s,]*([^\s,]*)$/);
+    const tokenStart = tokenMatch ? pos - tokenMatch[1].length : pos;
+
+    const afterCursor = val.slice(pos);
+
+    // Вставляем тег вместо токена
+    let insertText = tag + ",";
+    if (afterCursor.length && afterCursor[0] !== " " && afterCursor[0] !== ",") insertText += " ";
+
+    textarea.value = val.slice(0, tokenStart) + insertText + afterCursor;
+    const newPos = tokenStart + insertText.length;
+    textarea.setSelectionRange(newPos, newPos);
+    textarea.focus();
+  }
+
   // ------------------- Autocomplete -------------------
   function createAutocompleteFor(textarea){
     const wrapper=textarea.parentElement; wrapper.style.position=wrapper.style.position||"relative";
     let list=wrapper.querySelector(".autocomplete-list");
     if(!list){ list=document.createElement("div"); list.className="autocomplete-list"; wrapper.appendChild(list);}
     let activeIndex=-1, currentMatches=[];
+
     function formatPop(n){ if(!n) return""; if(n>=1e9)return(n/1e9).toFixed(1).replace(/\.0$/,'')+"B"; if(n>=1e6)return(n/1e6).toFixed(1).replace(/\.0$/,'')+"M"; if(n>=1e3)return(n/1e3).toFixed(1).replace(/\.0$/,'')+"K"; return String(n);}
+
     function hideList(){ list.style.display="none"; activeIndex=-1; currentMatches=[]; }
     function showList(){ if(currentMatches.length===0){ hideList(); return;} list.style.display="block"; }
+
     function buildList(query){
       const q=(query||"").toLowerCase();
       if(!q){ currentMatches=[]; buildDOM(); return; }
@@ -73,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }).slice(0,12);
       buildDOM(q);
     }
+
     function buildDOM(q){
       list.innerHTML="";
       if(!currentMatches||currentMatches.length===0){ hideList(); return; }
@@ -84,34 +109,39 @@ document.addEventListener("DOMContentLoaded", () => {
         const left=document.createElement("div"); left.className="tag"; left.innerHTML=displayTag;
         const right=document.createElement("div"); right.className="info"; right.textContent=formatPop(t.popularity)||(t.aliases&&t.aliases[0])||"";
         item.appendChild(left); item.appendChild(right);
-        item.addEventListener("mousedown",ev=>{ev.preventDefault(); selectIndex(idx);});
+        item.addEventListener("mousedown",ev=>{ev.preventDefault(); insertTagReplacingToken(textarea,currentMatches[idx].tag); hideList(); textarea.dispatchEvent(new Event("input"));});
         list.appendChild(item);
       });
       activeIndex=-1; updateActive(); showList();
     }
+
     function updateActive(){ const items=list.querySelectorAll(".autocomplete-item"); items.forEach(i=>i.classList.remove("active")); if(activeIndex>=0 && items[activeIndex]) items[activeIndex].classList.add("active"); }
-    function selectIndex(idx){ if(!currentMatches||!currentMatches[idx]) return; insertTagToTextarea(textarea,currentMatches[idx].tag); hideList(); textarea.focus(); textarea.dispatchEvent(new Event("input"));}
+
     function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
-    textarea.addEventListener("input",()=>{ const lastToken=textarea.value.split(/[\s,]+/).pop()||""; buildList(lastToken);});
+
+    textarea.addEventListener("input",()=>{
+      const pos = textarea.selectionStart;
+      const lastToken = textarea.value.slice(0,pos).match(/([^\s,]*)$/)?.[0] || "";
+      buildList(lastToken);
+    });
+
     textarea.addEventListener("keydown",e=>{
       const items=list.querySelectorAll(".autocomplete-item"); if(list.style.display==="none"||items.length===0) return;
       if(e.key==="ArrowDown"){e.preventDefault(); activeIndex=(activeIndex+1)%items.length; updateActive(); scrollActiveIntoView();}
       else if(e.key==="ArrowUp"){e.preventDefault(); activeIndex=(activeIndex-1+items.length)%items.length; updateActive(); scrollActiveIntoView();}
-      else if(e.key==="Enter"){ if(activeIndex>=0){e.preventDefault(); selectIndex(activeIndex);}}
+      else if(e.key==="Enter"){ if(activeIndex>=0){e.preventDefault(); insertTagReplacingToken(textarea,currentMatches[activeIndex].tag); hideList(); textarea.dispatchEvent(new Event("input"));}}
       else if(e.key==="Escape"){ hideList(); }
     });
-    function scrollActiveIntoView(){ const active=list.querySelector(".autocomplete-item.active"); if(active) active.scrollIntoView({block:"nearest"});}
+
+    function scrollActiveIntoView(){ const active=list.querySelector(".autocomplete-item.active"); if(active) active.scrollIntoView({block:"nearest"}); }
     textarea.addEventListener("blur",()=>{ setTimeout(()=>{ hideList(); },180); });
     hideList();
   }
 
-  // ------------------- Insert Tag -------------------
-  function insertTagToTextarea(ta,tag){ let text=ta.value; text=text.replace(/([^\s,]+)$/g,""); text=text.replace(/[\s,]+$/g,""); if(text.length>0) text+=", "; text+=tag+","; ta.value=text; autoResizeTextarea(ta); }
-
   // ------------------- Render Live Fields -------------------
   const renderLiveFields=()=>{
     liveContainer.innerHTML="";
-    fieldsData.forEach((f,index)=>{
+    fieldsData.forEach(f=>{
       const div=document.createElement("div"); div.className="field-live";
       div.innerHTML=`
         <label>${escapeHtml(f.name)}</label>
@@ -138,14 +168,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let result = "";
     fieldsData.forEach(f => {
       if(!f.liveText || !f.includeInPrompt) return;
-
-      const lines = f.liveText.split(/\r?\n/).map(l => l.trimEnd()); // убираем только пробелы справа
-      const processedLines = lines.map(l => l ? (l.endsWith(",") ? l : l + ",") : ""); // пустые строки оставляем
-
+      const lines = f.liveText.split(/\r?\n/).map(l => l.trim());
+      const processedLines = lines.map(l => l ? (l.endsWith(",") ? l : l + ",") : "");
       if(f.newLine) result += processedLines.join("\n") + "\n";
       else result += processedLines.join(" ") + " ";
     });
-
     resultArea.value = result.trim();
     autoResizeTextarea(resultArea);
   };
@@ -254,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const saved=localStorage.getItem("promptBuilderFields");
     if(saved){
       try{ fieldsData=JSON.parse(saved); }
-      catch(e){ console.warn("Ошибка парсинга сохранённых данных, загружаем по умолчанию."); fieldsData=data.map(f=>({ name:f[0], hint:f[1], liveText:f[2], nameText:f[0], editText:f[1], newLine:f[3], includeInPrompt:f[4] })); }
+      catch(e){ fieldsData=data.map(f=>({ name:f[0], hint:f[1], liveText:f[2], nameText:f[0], editText:f[1], newLine:f[3], includeInPrompt:f[4] })); }
     } else fieldsData=data.map(f=>({ name:f[0], hint:f[1], liveText:f[2], nameText:f[0], editText:f[1], newLine:f[3], includeInPrompt:f[4] }));
     renderLiveFields(); updatePrompt();
   }).catch(err=>console.error("Не удалось загрузить default template:",err));
