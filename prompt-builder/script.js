@@ -120,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function escapeRegExp(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 
     textarea.addEventListener("input",()=>{
+      if (textarea._isPriorityChangeEvent) return;
       const pos = textarea.selectionStart;
       const lastToken = textarea.value.slice(0,pos).match(/([^\s,]*)$/)?.[0] || "";
       buildList(lastToken);
@@ -138,12 +139,124 @@ document.addEventListener("DOMContentLoaded", () => {
     hideList();
   }
 
+  // ------------------- Priority Change on Keydown -------------------
+  function handlePriorityKeydown(e) {
+    if (e.ctrlKey && e.shiftKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+      e.preventDefault();
+      const textarea = e.target;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      let selectedText = textarea.value.substring(start, end);
+
+      if (!selectedText.trim()) return; // Игнорируем, если выделены только пробелы
+
+      const direction = e.key === 'ArrowUp' ? 1 : -1;
+      const weightRegex = /^\(([^:]+):([\d.]+)\)$/;
+      const match = selectedText.match(weightRegex);
+
+      let newText;
+
+      if (match) {
+        // Сценарий 1: Выделен полный взвешенный тег, например `(text:1.0)`
+        const text = match[1];
+        let weight = parseFloat(match[2]);
+        weight += 0.1 * direction;
+        weight = Math.max(0, Math.round(weight * 10) / 10);
+        newText = `(${text}:${weight.toFixed(1)})`;
+        textarea.setRangeText(newText, start, end, 'select');
+      } else {
+        // Сценарий 2: Выделен только текст ВНУТРИ взвешенного тега
+        const textBefore = textarea.value.substring(0, start);
+        const textAfter = textarea.value.substring(end);
+
+        // Проверяем, что непосредственно перед выделением стоит '(', а после — конструкция ':вес)'
+        const prefixRegex = /\($/;
+        const suffixRegex = /^:([\d.]+)\)/;
+
+        const suffixMatch = textAfter.match(suffixRegex);
+
+        if (prefixRegex.test(textBefore) && suffixMatch) {
+          // Нашли обрамление, изменяем вес
+          let weight = parseFloat(suffixMatch[1]);
+          weight += 0.1 * direction;
+          weight = Math.max(0, Math.round(weight * 10) / 10);
+          
+          const newWeightStr = `:${weight.toFixed(1)}`;
+          // Заменяем старый вес на новый
+          textarea.setRangeText(newWeightStr, end, end + suffixMatch[0].length - 1, 'preserve');
+        } else {
+          // Сценарий 3: Создание нового взвешенного тега
+          if (selectedText.startsWith('(') && selectedText.endsWith(')')) {
+              selectedText = selectedText.substring(1, selectedText.length - 1);
+          }
+          const initialWeight = direction > 0 ? 1.0 : 0.9;
+          newText = `(${selectedText}:${initialWeight.toFixed(1)})`;
+          textarea.setRangeText(newText, start, end, 'select');
+        }
+      }
+
+      // Триггерим событие input, чтобы обновить итоговый промпт
+      textarea._isPriorityChangeEvent = true;
+      const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+      textarea.dispatchEvent(inputEvent);
+      delete textarea._isPriorityChangeEvent;
+    }
+  }
+
+  // ------------------- Bracket Validation -------------------
+  function checkBrackets(text) {
+    const pairs = { '(': ')', '{': '}', '[': ']', '<': '>', '"': '"' };
+    const openBrackets = Object.keys(pairs);
+    const closeBrackets = Object.values(pairs);
+    const stack = [];
+    const missing = {};
+    let inQuotes = false;
+  
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+  
+      if (char === '"' && (i === 0 || text[i-1] !== '\\')) {
+        if (inQuotes && stack[stack.length - 1] === '"') {
+          stack.pop();
+        } else {
+          stack.push(char);
+        }
+        inQuotes = !inQuotes; // Toggle state
+        continue;
+      }
+  
+      if (inQuotes) continue;
+  
+      if (openBrackets.includes(char)) {
+        stack.push(char);
+      } else if (closeBrackets.includes(char)) {
+        const lastOpen = stack[stack.length - 1];
+        if (stack.length > 0 && pairs[lastOpen] === char) {
+          stack.pop();
+        } else {
+          // Unmatched closing bracket, means we are missing an opening one
+          const needed = Object.keys(pairs).find(key => pairs[key] === char);
+          if (needed) missing[needed] = (missing[needed] || 0) + 1;
+        }
+      }
+    }
+  
+    // Unmatched opening brackets, means we are missing closing ones
+    while (stack.length > 0) {
+      const open = stack.pop();
+      const needed = pairs[open];
+      missing[needed] = (missing[needed] || 0) + 1;
+    }
+    return missing;
+  }
+
   // ------------------- Render Live Fields -------------------
   const renderLiveFields=()=>{
     liveContainer.innerHTML="";
     fieldsData.forEach(f=>{
       const div=document.createElement("div"); div.className="field-live";
       div.innerHTML=`
+        <div class="bracket-warning"></div>
         <label>${escapeHtml(f.name)}</label>
         <div class="hint-toggle">Показать подсказку</div>
         <div class="hint-text">${escapeHtml(f.hint)}</div>
@@ -152,11 +265,25 @@ document.addEventListener("DOMContentLoaded", () => {
       const textarea=div.querySelector("textarea");
       const toggle=div.querySelector(".hint-toggle");
       const hintText=div.querySelector(".hint-text");
+      const warningEl = div.querySelector(".bracket-warning");
       hintText.style.display="none";
 
-      textarea.addEventListener("input",e=>{ f.liveText=e.target.value; updatePrompt(); saveFields(); autoResizeTextarea(e.target);});
+      const updateBracketWarning = () => {
+        const missing = checkBrackets(textarea.value);
+        const entries = Object.entries(missing);
+        if (entries.length > 0) {
+          warningEl.textContent = entries.map(([bracket, count]) => `${bracket} - ${count}`).join(' / ');
+          warningEl.style.display = 'block';
+        } else {
+          warningEl.style.display = 'none';
+        }
+      };
+
+      textarea.addEventListener("input",e=>{ f.liveText=e.target.value; updatePrompt(); saveFields(); autoResizeTextarea(e.target); updateBracketWarning(); });
+      textarea.addEventListener("keydown", handlePriorityKeydown);
       toggle.addEventListener("click",()=>{ const hidden=hintText.style.display==="none"; hintText.style.display=hidden?"block":"none"; toggle.textContent=hidden?"Скрыть подсказку":"Показать подсказку";});
       createAutocompleteFor(textarea);
+      updateBracketWarning(); // Initial check
       liveContainer.appendChild(div);
     });
     initAutoResizeAll();
