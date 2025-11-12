@@ -1,114 +1,173 @@
 [
-  [
-    "Кто",
-    "Тип персонажа, возраст, гендер",
-    "",
-    true,
-    true
-  ],
-  [
-    "Внешность / стиль",
-    "Цвет волос, глаза, особенности",
-    "",
-    true,
-    true
-  ],
-  [
-    "Одежда / аксессуары",
-    "Одежда, украшения, фетиши",
-    "",
-    true,
-    true
-  ],
-  [
-    "Фон / окружение",
-    "Комната, пейзаж, окружение",
-    "",
-    true,
-    true
-  ],
-  [
-    "Атмосфера / освещение",
-    "Настроение, тип освещения",
-    "",
-    true,
-    true
-  ],
-  [
-    "Стилизация / техника",
-    "Аниме стиль, художник, жанр",
-    "",
-    true,
-    true
-  ],
-  [
-    "Композиция / ракурс",
-    "Камера, фокус, перспектива",
-    "",
-    true,
-    true
-  ],
-  [
-    "Качество / разрешение",
-    "Детализация, итоговый вид",
-    "",
-    true,
-    true
-  ],
-  [
-    "Персонаж",
-    "LORA персонажа",
-    "",
-    true,
-    true
-  ],
-  [
-    "🔞 NSFW теги (опц.)",
-    "Только если нужна NSFW сцена",
-    "",
-    true,
-    true
-  ],
-  [
-    "Embendings",
-    "Дополнения",
-    "",
-    true,
-    true
-  ],
-  [
-    "Пакет из LORA",
-    "Все LORA, что могут использоваться в генерации",
-    "<lora:69yottea_illu_v2:0.39>, 69yottea_style_illu,\n<lora:WSSKX_WAI:0.3>,\n<lora:748cm_illu:0.4>, 7481llu,\n<lora:ppw_v8_Illuv2stable_128:0.5>,\n\n<lora:Smooth_Booster:0.1>,\n<lora:s41l0rm00nXLP_r1:0.2>, s41l0rm00n, retro artstyle,\n<lora:Gurren_Lagan_Eyecatch_2:0.4>, GurLagCatch,\n<lora:DynamicPoseIL2att_alpha1.0_rank4_noxattn_900steps:1.35>, dynamic pose, foreshortening, extreme perspective",
-    true,
-    true
-  ],
-  [
-    "Negative prompt",
-    "Что исключить",
-    "lazyneg, worst quality, normal quality, anatomical nonsense, bad anatomy, interlocked fingers, extra fingers, watermark, transparent, low quality, logo,text, signature, missing fingers, extra fingers, extra toes, missing toes, shiny skin, glistening_clothing, shiny clothes, blurry, blurry text, distorted letters, incorrect spelling, latin alphabet, extra words, bad typography, misspelled,",
-    true,
-    false
-  ],
-  [
-    "ADetailer hands negative",
-    "",
-    "face, eyes, person, extra limbs, mutated hands, extra fingers,",
-    true,
-    false
-  ],
-  [
-    "ADetailer hands positive",
-    "",
-    "<lora:detailed hand focus style illustriousXL v1.1:0.8>,",
-    true,
-    false
-  ],
-  [
-    "ADetailer face positive",
-    "",
-    "cute face, perfect face, large magenta eyes, gradient eyes, slit pupils, blush, teeth, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
-    true,
-    false
-  ]
+  {
+    "name": "Кто",
+    "hint": "Тип персонажа, возраст, гендер",
+    "liveText": "1girl, noel vtuber, solo, young,\n",
+    "nameText": "Кто",
+    "editText": "Тип персонажа, возраст, гендер",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Внешность / стиль",
+    "hint": "Цвет волос, глаза, особенности",
+    "liveText": "ass, breasts, brown cardigan, cardigan, hair over one eye, kneepits, thighs, bare shoulders,\n",
+    "nameText": "Внешность / стиль",
+    "editText": "Цвет волос, глаза, особенности",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Одежда / аксессуары",
+    "hint": "Одежда, украшения, фетиши",
+    "liveText": "bra, long sleeves, open cardigan, open clothes, puffy long sleeves, puffy sleeves, underwear, frilled (red:1.3) bra, covered nipples,\n",
+    "nameText": "Одежда / аксессуары",
+    "editText": "Одежда, украшения, фетиши",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Внешность персонажа",
+    "hint": "Внешность свойственая только этому персонажу",
+    "liveText": "demon horns, red eyes, (heart-shaped pupils:1.2), low twintails, (white horns:1.4), smooth horns, polished horns, sleek horns, brown hair, absurdly long hair, medium breasts, black demon tail,\n",
+    "nameText": "Внешность персонажа",
+    "editText": "Внешность свойственая только этому персонажу",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Одежда персонажа",
+    "hint": "Одежда свойственная только этому персонажу",
+    "liveText": "(uneven legwear:1.2), single black thighhigh, thigh strap, thighhighs, gold heart-shaped hairpins, blue ribbon of hair bow, red ribbon of hair bow,\n",
+    "nameText": "Одежда персонажа",
+    "editText": "Одежда свойственная только этому персонажу",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Действие / поза",
+    "hint": "Поза, взаимодействие, выражение лица",
+    "liveText": "legs_up, lying, on back, on bed, drooling, open_mouth,\n",
+    "nameText": "Действие / поза",
+    "editText": "Поза, взаимодействие, выражение лица",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Фон / окружение",
+    "hint": "Комната, пейзаж, окружение",
+    "liveText": "bedroom, bedside table, night lamp, bed sheet, stuffed toy, inside, stuffed animal, bed,\n",
+    "nameText": "Фон / окружение",
+    "editText": "Комната, пейзаж, окружение",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Атмосфера / освещение",
+    "hint": "Настроение, тип освещения",
+    "liveText": "volumetric lighting,\n",
+    "nameText": "Атмосфера / освещение",
+    "editText": "Настроение, тип освещения",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Стилизация / техника",
+    "hint": "Аниме стиль, художник, жанр",
+    "liveText": "",
+    "nameText": "Стилизация / техника",
+    "editText": "Аниме стиль, художник, жанр",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Композиция / ракурс",
+    "hint": "Камера, фокус, перспектива",
+    "liveText": "atmospheric perspective,\n",
+    "nameText": "Композиция / ракурс",
+    "editText": "Камера, фокус, перспектива",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Качество / разрешение",
+    "hint": "Детализация, итоговый вид",
+    "liveText": "masterpiece, best quality, amazing quality, very awa, absurdres, newest, very aesthetic, depth of field, highres,\n",
+    "nameText": "Качество / разрешение",
+    "editText": "Детализация, итоговый вид",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Персонаж",
+    "hint": "LORA персонажа",
+    "liveText": "<lora:noel_vtuber_ILL:0.6>,\n",
+    "nameText": "Персонаж",
+    "editText": "LORA персонажа",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "🔞 NSFW теги (опц.)",
+    "hint": "Только если нужна NSFW сцена",
+    "liveText": "",
+    "nameText": "🔞 NSFW теги (опц.)",
+    "editText": "Только если нужна NSFW сцена",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Embendings",
+    "hint": "Дополнения",
+    "liveText": "lazypos,\n",
+    "nameText": "Embendings",
+    "editText": "Дополнения",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Пакет из LORA",
+    "hint": "Все LORA, что могут использоваться в генерации",
+    "liveText": "<lora:Smooth_Booster:0.1>,\n<lora:s41l0rm00nXLP_r1:0.2>, s41l0rm00n, retro artstyle,\n<lora:Gurren_Lagan_Eyecatch_2:0.4>, GurLagCatch,\n<lora:DynamicPoseIL2att_alpha1.0_rank4_noxattn_900steps:1.35>, dynamic pose, foreshortening, extreme perspective,\n<lora:Tail_Censor_PONY_XL_by_UOC:1>, t41lc3ns0r, TailCensor, Tail Censor,",
+    "nameText": "Пакет из LORA",
+    "editText": "Все LORA, что могут использоваться в генерации",
+    "newLine": true,
+    "includeInPrompt": true
+  },
+  {
+    "name": "Negative prompt",
+    "hint": "Что исключить",
+    "liveText": "lazyneg, worst quality, normal quality, anatomical nonsense, bad anatomy, interlocked fingers, extra fingers, watermark, transparent, low quality, logo,text, signature, missing fingers, extra fingers, extra toes, missing toes, shiny skin, glistening_clothing, shiny clothes, blurry, blurry text, distorted letters, incorrect spelling, latin alphabet, extra words, bad typography, misspelled, black clothes,",
+    "nameText": "Negative prompt",
+    "editText": "Что исключить",
+    "newLine": true,
+    "includeInPrompt": false
+  },
+  {
+    "name": "ADetailer hands positive",
+    "hint": "",
+    "liveText": "<lora:detailed hand focus style illustriousXL v1.1:0.8>,",
+    "nameText": "ADetailer hands positive",
+    "editText": "",
+    "newLine": true,
+    "includeInPrompt": false
+  },
+  {
+    "name": "ADetailer hands negative",
+    "hint": "",
+    "liveText": "face, eyes, person, extra limbs, mutated hands, extra fingers,",
+    "nameText": "ADetailer hands negative",
+    "editText": "",
+    "newLine": true,
+    "includeInPrompt": false
+  },
+  {
+    "name": "ADetailer face positive",
+    "hint": "",
+    "liveText": "cute face, perfect face, large magenta eyes, gradient eyes, slit pupils, blush, teeth, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
+    "nameText": "ADetailer face positive",
+    "editText": "",
+    "newLine": true,
+    "includeInPrompt": false
+  }
 ]
