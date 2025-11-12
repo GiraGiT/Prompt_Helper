@@ -169,5 +169,14 @@
     "editText": "",
     "newLine": true,
     "includeInPrompt": false
+  },
+  {
+    "name": "Seed",
+    "hint": "seed",
+    "liveText": "1079266484",
+    "nameText": "Seed",
+    "editText": "seed",
+    "newLine": true,
+    "includeInPrompt": false
   }
 ]
