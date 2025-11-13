@@ -11,6 +11,73 @@ document.addEventListener("DOMContentLoaded", () => {
   let tagList = [];
   let isEdit = false;
 
+  // ------------------- Undo/Redo History -------------------
+  let history = [];
+  let historyIndex = -1;
+  let historyTimeout;
+
+  const pushHistory = () => {
+    if (historyIndex < history.length - 1) {
+      history = history.slice(0, historyIndex + 1);
+    }
+    const currentState = JSON.stringify(fieldsData);
+    if (history.length > 0 && history[historyIndex] === currentState) {
+      return;
+    }
+    history.push(currentState);
+    historyIndex++;
+    if (history.length > 50) {
+      history.shift();
+      historyIndex--;
+    }
+  };
+
+  const recordHistory = () => {
+    clearTimeout(historyTimeout);
+    historyTimeout = setTimeout(pushHistory, 500);
+  };
+
+  const recordHistoryImmediate = () => {
+    clearTimeout(historyTimeout);
+    pushHistory();
+  };
+
+  const undo = () => {
+    if (historyIndex > 0) {
+      historyIndex--;
+      fieldsData = JSON.parse(history[historyIndex]);
+      localStorage.setItem("promptBuilderFields", JSON.stringify(fieldsData));
+      if (isEdit) renderEditFields(); else renderLiveFields();
+      updatePrompt();
+    }
+  };
+
+  const redo = () => {
+    if (historyIndex < history.length - 1) {
+      historyIndex++;
+      fieldsData = JSON.parse(history[historyIndex]);
+      localStorage.setItem("promptBuilderFields", JSON.stringify(fieldsData));
+      if (isEdit) renderEditFields(); else renderLiveFields();
+      updatePrompt();
+    }
+  };
+
+  document.addEventListener("keydown", e => {
+    if (e.ctrlKey && !e.altKey) {
+        if (e.key.toLowerCase() === 'z') {
+            e.preventDefault();
+            if (e.shiftKey) {
+                redo();
+            } else {
+                undo();
+            }
+        } else if (e.key.toLowerCase() === 'y') {
+            e.preventDefault();
+            redo();
+        }
+    }
+  });
+
   // ------------------- CSV parsing -------------------
   function parseCSVLine(line) {
     const tokens = [];
@@ -49,8 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const initAutoResizeAll=()=>{document.querySelectorAll("textarea").forEach(ta=>{ta.removeEventListener("input",ta._autoResizeHandler||(()=>{})); const h=()=>autoResizeTextarea(ta); ta._autoResizeHandler=h; ta.addEventListener("input",h); autoResizeTextarea(ta);});};
 
-  // ------------------- Save/load -------------------
-  const saveFields=()=>localStorage.setItem("promptBuilderFields",JSON.stringify(fieldsData));
 
   // ------------------- Insert Tag (replaces token) -------------------
   function insertTagReplacingToken(textarea, tag) {
@@ -279,7 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
 
-      textarea.addEventListener("input",e=>{ f.liveText=e.target.value; updatePrompt(); saveFields(); autoResizeTextarea(e.target); updateBracketWarning(); });
+      textarea.addEventListener("input",e=>{ f.liveText=e.target.value; updatePrompt(); recordHistory(); autoResizeTextarea(e.target); updateBracketWarning(); });
       textarea.addEventListener("keydown", handlePriorityKeydown);
       toggle.addEventListener("click",()=>{ const hidden=hintText.style.display==="none"; hintText.style.display=hidden?"block":"none"; toggle.textContent=hidden?"Скрыть подсказку":"Показать подсказку";});
       createAutocompleteFor(textarea);
@@ -326,9 +391,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const wrapper=document.createElement("div"); wrapper.id="edit-fields-wrapper"; wrapper.className="fields-edit";
     editContainer.appendChild(wrapper);
 
-    addBtn.addEventListener("click",()=>{ fieldsData.push({ name:"Новая категория", hint:"", liveText:"", nameText:"Новая категория", editText:"", newLine:true, includeInPrompt:true }); renderEditFields(); saveFields(); });
+    addBtn.addEventListener("click",()=>{ fieldsData.push({ name:"Новая категория", hint:"", liveText:"", nameText:"Новая категория", editText:"", newLine:true, includeInPrompt:true }); renderEditFields(); recordHistoryImmediate(); });
 
-    resetBtn.addEventListener("click",()=>{ fetch(defaultTemplateFile).then(r=>r.json()).then(data=>{ fieldsData=data.map(f=>({ name:f[0], hint:f[1], liveText:f[2], nameText:f[0], editText:f[1], newLine:f[3], includeInPrompt:f[4] })); renderEditFields(); renderLiveFields(); updatePrompt(); saveFields(); }); });
+    resetBtn.addEventListener("click",()=>{ fetch(defaultTemplateFile).then(r=>r.json()).then(data=>{ fieldsData=data.map(f=>({ name:f.name||"", hint:f.hint||"", liveText:f.liveText||"", nameText:f.nameText||f.name||"", editText:f.editText||f.hint||"", newLine:f.newLine!==undefined?f.newLine:true, includeInPrompt:f.includeInPrompt!==undefined?f.includeInPrompt:true })); renderEditFields(); renderLiveFields(); updatePrompt(); recordHistoryImmediate(); }); });
 
     exportBtn.addEventListener("click",()=>{ const blob=new Blob([JSON.stringify(fieldsData,null,2)],{type:"application/json"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="prompt-builder-template.json"; a.click(); URL.revokeObjectURL(url); });
 
@@ -341,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const imported=JSON.parse(reader.result);
           if(!Array.isArray(imported)) throw new Error("Неверный формат файла");
           fieldsData=imported.map(f=>({ name:f.name||"", hint:f.hint||"", liveText:f.liveText||"", nameText:f.nameText||f.name||"", editText:f.editText||f.hint||"", newLine:f.newLine!==undefined?f.newLine:true, includeInPrompt:f.includeInPrompt!==undefined?f.includeInPrompt:true }));
-          renderEditFields(); renderLiveFields(); updatePrompt(); saveFields();
+          renderEditFields(); renderLiveFields(); updatePrompt(); recordHistoryImmediate();
         } catch(err){ alert("Ошибка при импорте шаблона: "+err.message); }
       };
       reader.readAsText(file); importFileInput.value="";
@@ -366,11 +431,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const checkboxInclude=div.querySelectorAll("input[type=checkbox]")[1];
       const removeBtn=div.querySelector(".remove-btn");
 
-      input.addEventListener("input",e=>{ f.nameText=e.target.value; f.name=f.nameText; saveFields(); renderLiveFields(); });
-      textarea.addEventListener("input",e=>{ f.editText=e.target.value; f.hint=f.editText; saveFields(); renderLiveFields(); });
-      checkboxNewLine.addEventListener("change",e=>{ f.newLine=e.target.checked; saveFields(); updatePrompt(); });
-      checkboxInclude.addEventListener("change",e=>{ f.includeInPrompt=e.target.checked; updatePrompt(); saveFields(); });
-      removeBtn.addEventListener("click",()=>{ fieldsData.splice(index,1); renderEditFields(); renderLiveFields(); updatePrompt(); saveFields(); });
+      input.addEventListener("input",e=>{ f.nameText=e.target.value; f.name=f.nameText; recordHistory(); renderLiveFields(); });
+      textarea.addEventListener("input",e=>{ f.editText=e.target.value; f.hint=f.editText; recordHistory(); renderLiveFields(); });
+      checkboxNewLine.addEventListener("change",e=>{ f.newLine=e.target.checked; recordHistoryImmediate(); updatePrompt(); });
+      checkboxInclude.addEventListener("change",e=>{ f.includeInPrompt=e.target.checked; updatePrompt(); recordHistoryImmediate(); });
+      removeBtn.addEventListener("click",()=>{ fieldsData.splice(index,1); renderEditFields(); renderLiveFields(); updatePrompt(); recordHistoryImmediate(); });
 
       wrapper.appendChild(div);
       autoResizeTextarea(textarea);
@@ -387,7 +452,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const old=fieldsData.find(f=>f.nameText===input.value||f.name===input.value)||{};
           newData.push({ name:old.name, hint:old.hint, liveText:old.liveText, nameText:input.value, editText:textarea.value, newLine:checkboxNewLine.checked, includeInPrompt:checkboxInclude.checked });
         });
-        fieldsData=newData; renderLiveFields(); updatePrompt(); saveFields();
+        fieldsData=newData; renderLiveFields(); updatePrompt(); recordHistoryImmediate();
       }});
     }
   };
@@ -408,9 +473,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const saved=localStorage.getItem("promptBuilderFields");
     if(saved){
       try{ fieldsData=JSON.parse(saved); }
-      catch(e){ fieldsData=data.map(f=>({ name:f[0], hint:f[1], liveText:f[2], nameText:f[0], editText:f[1], newLine:f[3], includeInPrompt:f[4] })); }
-    } else fieldsData=data.map(f=>({ name:f[0], hint:f[1], liveText:f[2], nameText:f[0], editText:f[1], newLine:f[3], includeInPrompt:f[4] }));
+      catch(e){ fieldsData=data.map(f=>({ name:f.name||"", hint:f.hint||"", liveText:f.liveText||"", nameText:f.nameText||f.name||"", editText:f.editText||f.hint||"", newLine:f.newLine!==undefined?f.newLine:true, includeInPrompt:f.includeInPrompt!==undefined?f.includeInPrompt:true })); }
+    } else fieldsData=data.map(f=>({ name:f.name||"", hint:f.hint||"", liveText:f.liveText||"", nameText:f.nameText||f.name||"", editText:f.editText||f.hint||"", newLine:f.newLine!==undefined?f.newLine:true, includeInPrompt:f.includeInPrompt!==undefined?f.includeInPrompt:true }));
     renderLiveFields(); updatePrompt();
+    pushHistory();
   }).catch(err=>console.error("Не удалось загрузить default template:",err));
 
   // ------------------- Copy button -------------------
