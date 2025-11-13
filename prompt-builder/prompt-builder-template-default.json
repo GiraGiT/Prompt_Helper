@@ -164,7 +164,7 @@
   {
     "name": "ADetailer face positive",
     "hint": "",
-    "liveText": "cute face, perfect face, large red eyes, gradient eyes, slit pupils, blush, teeth, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
+    "liveText": "cute face, perfect face, large red eyes, gradient eyes, slit pupils, blush, drooling, open_mouth, teeth, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
     "nameText": "ADetailer face positive",
     "editText": "",
     "newLine": true,
