@@ -1,8 +1,17 @@
 [
   {
+    "name": "Новая категория",
+    "hint": "",
+    "liveText": "",
+    "nameText": "Новая категория",
+    "editText": "",
+    "newLine": true,
+    "includeInPrompt": false
+  },
+  {
     "name": "Кто",
     "hint": "Тип персонажа, возраст, гендер",
-    "liveText": "1girl, noel vtuber, solo, young,\n",
+    "liveText": "solo, 1other, no humans, hornet \\(hollow knight\\), noel vtuber, bug,\n",
     "nameText": "Кто",
     "editText": "Тип персонажа, возраст, гендер",
     "newLine": true,
@@ -11,7 +20,7 @@
   {
     "name": "Внешность / стиль",
     "hint": "Цвет волос, глаза, особенности",
-    "liveText": "ass, breasts, brown cardigan, cardigan, hair over one eye, kneepits, thighs, bare shoulders,\n",
+    "liveText": "hollow eyes,\n",
     "nameText": "Внешность / стиль",
     "editText": "Цвет волос, глаза, особенности",
     "newLine": true,
@@ -20,7 +29,7 @@
   {
     "name": "Одежда / аксессуары",
     "hint": "Одежда, украшения, фетиши",
-    "liveText": "bra, long sleeves, open cardigan, open clothes, puffy long sleeves, puffy sleeves, underwear, frilled (red:1.3) bra, covered nipples,\n",
+    "liveText": "red cloak,\n",
     "nameText": "Одежда / аксессуары",
     "editText": "Одежда, украшения, фетиши",
     "newLine": true,
@@ -29,7 +38,7 @@
   {
     "name": "Внешность персонажа",
     "hint": "Внешность свойственая только этому персонажу",
-    "liveText": "demon horns, red eyes, (heart-shaped pupils:1.2), low twintails, (white horns:1.4), smooth horns, polished horns, sleek horns, brown hair, absurdly long hair, medium breasts, black demon tail,\n",
+    "liveText": "low twintails, (horns of a demon under a mask, white horns:1.4), smooth horns, polished horns, sleek horns, brown hair, absurdly long hair, medium breasts, black demon tail,\n",
     "nameText": "Внешность персонажа",
     "editText": "Внешность свойственая только этому персонажу",
     "newLine": true,
@@ -38,7 +47,7 @@
   {
     "name": "Одежда персонажа",
     "hint": "Одежда свойственная только этому персонажу",
-    "liveText": "(uneven legwear:1.2), single black thighhigh, thigh strap, thighhighs, gold heart-shaped hairpins, blue ribbon of hair bow, red ribbon of hair bow,\n",
+    "liveText": "red bikini top, (mini skirt, blue denim skirt, frilled skirt, fluffy skirt:1.2), blue ribbon of hair bow, red ribbon of hair bow,\n",
     "nameText": "Одежда персонажа",
     "editText": "Одежда свойственная только этому персонажу",
     "newLine": true,
@@ -47,7 +56,7 @@
   {
     "name": "Действие / поза",
     "hint": "Поза, взаимодействие, выражение лица",
-    "liveText": "legs_up, lying, on back, on bed, drooling, open_mouth,\n",
+    "liveText": "holding a large pin,\n",
     "nameText": "Действие / поза",
     "editText": "Поза, взаимодействие, выражение лица",
     "newLine": true,
@@ -56,7 +65,7 @@
   {
     "name": "Фон / окружение",
     "hint": "Комната, пейзаж, окружение",
-    "liveText": "bedroom, bedside table, night lamp, bed sheet, stuffed toy, inside, stuffed animal, bed,\n",
+    "liveText": "black forest on background, glowing butterflies,\n",
     "nameText": "Фон / окружение",
     "editText": "Комната, пейзаж, окружение",
     "newLine": true,
@@ -65,7 +74,7 @@
   {
     "name": "Атмосфера / освещение",
     "hint": "Настроение, тип освещения",
-    "liveText": "volumetric lighting,\n",
+    "liveText": "",
     "nameText": "Атмосфера / освещение",
     "editText": "Настроение, тип освещения",
     "newLine": true,
@@ -83,7 +92,7 @@
   {
     "name": "Композиция / ракурс",
     "hint": "Камера, фокус, перспектива",
-    "liveText": "atmospheric perspective,\n",
+    "liveText": "cowboy shot,\n",
     "nameText": "Композиция / ракурс",
     "editText": "Камера, фокус, перспектива",
     "newLine": true,
@@ -92,7 +101,7 @@
   {
     "name": "Качество / разрешение",
     "hint": "Детализация, итоговый вид",
-    "liveText": "masterpiece, best quality, amazing quality, very awa, absurdres, newest, very aesthetic, depth of field, highres,\n",
+    "liveText": "masterpiece, best quality, newest, absurdres, highres, new,\n",
     "nameText": "Качество / разрешение",
     "editText": "Детализация, итоговый вид",
     "newLine": true,
@@ -101,7 +110,7 @@
   {
     "name": "Персонаж",
     "hint": "LORA персонажа",
-    "liveText": "<lora:noel_vtuber_ILL:0.6>,\n",
+    "liveText": "<lora:noel_vtuber_sdxl:1>,\n<lora:Hornet_hollow_knight_Illustrious:0.15>,\n",
     "nameText": "Персонаж",
     "editText": "LORA персонажа",
     "newLine": true,
@@ -128,7 +137,7 @@
   {
     "name": "Пакет из LORA",
     "hint": "Все LORA, что могут использоваться в генерации",
-    "liveText": "<lora:Smooth_Booster:0.1>,\n<lora:s41l0rm00nXLP_r1:0.2>, s41l0rm00n, retro artstyle,\n<lora:Gurren_Lagan_Eyecatch_2:0.4>, GurLagCatch,\n<lora:DynamicPoseIL2att_alpha1.0_rank4_noxattn_900steps:1.35>, dynamic pose, foreshortening, extreme perspective,\n<lora:Tail_Censor_PONY_XL_by_UOC:1>, t41lc3ns0r, TailCensor, Tail Censor,",
+    "liveText": "<lora:backlitILL:0.6> backlit, backlighting,\n<lora:zy_Detailed_Backgrounds_v1:0.6>,\n<lora:DynamicPoseIL2att_alpha1.0_rank4_noxattn_900steps:1.35> dynamic pose, foreshortening, extreme perspective,\n",
     "nameText": "Пакет из LORA",
     "editText": "Все LORA, что могут использоваться в генерации",
     "newLine": true,
@@ -137,7 +146,7 @@
   {
     "name": "Negative prompt",
     "hint": "Что исключить",
-    "liveText": "lazyneg, worst quality, normal quality, anatomical nonsense, bad anatomy, interlocked fingers, extra fingers, watermark, transparent, low quality, logo,text, signature, missing fingers, extra fingers, extra toes, missing toes, shiny skin, glistening_clothing, shiny clothes, blurry, blurry text, distorted letters, incorrect spelling, latin alphabet, extra words, bad typography, misspelled, black clothes,",
+    "liveText": "lazyneg, 3D, realistic, low quality, low detail, monochrome, greyscale, artist name, signature, watermark, multiple hands, indoors, (oni horns, short horns, small horns:1.6), (red horns, black horns, wide angle:1.4), blue sky, key light, wool tail, thin tail, legs together, evil smile, shirt, pink skirt, shiny clothes, fat, hip bones, pointy ears, lace-trimmed choker, glowing horns,\n",
     "nameText": "Negative prompt",
     "editText": "Что исключить",
     "newLine": true,
@@ -164,7 +173,7 @@
   {
     "name": "ADetailer face positive",
     "hint": "",
-    "liveText": "cute face, perfect face, large red eyes, gradient eyes, slit pupils, blush, drooling, open_mouth, teeth, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
+    "liveText": "cute face, perfect face, large red eyes, gradient eyes, slit pupils, blush, open_mouth, teeth, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
     "nameText": "ADetailer face positive",
     "editText": "",
     "newLine": true,
@@ -173,7 +182,7 @@
   {
     "name": "Seed",
     "hint": "seed",
-    "liveText": "1079266484",
+    "liveText": "",
     "nameText": "Seed",
     "editText": "seed",
     "newLine": true,
