@@ -1,17 +1,17 @@
 [
   {
-    "name": "Новая категория",
-    "hint": "",
-    "liveText": "",
-    "nameText": "Новая категория",
-    "editText": "",
-    "newLine": true,
+    "name": "Общий текст",
+    "hint": "Общий текст для разбивки",
+    "liveText": "Общий текст для разбивки",
+    "nameText": "Общий текст",
+    "editText": "Общий текст для разбивки",
+    "newLine": false,
     "includeInPrompt": false
   },
   {
     "name": "Кто",
     "hint": "Тип персонажа, возраст, гендер",
-    "liveText": "solo, 1other, no humans, hornet \\(hollow knight\\), noel vtuber, bug,\n",
+    "liveText": "1girl, noel vtuber, solo, young,",
     "nameText": "Кто",
     "editText": "Тип персонажа, возраст, гендер",
     "newLine": true,
@@ -20,7 +20,7 @@
   {
     "name": "Внешность / стиль",
     "hint": "Цвет волос, глаза, особенности",
-    "liveText": "hollow eyes,\n",
+    "liveText": "",
     "nameText": "Внешность / стиль",
     "editText": "Цвет волос, глаза, особенности",
     "newLine": true,
@@ -29,7 +29,7 @@
   {
     "name": "Одежда / аксессуары",
     "hint": "Одежда, украшения, фетиши",
-    "liveText": "red cloak,\n",
+    "liveText": "blue shorts, black thighhighs, hood, short shorts, shorts, thighhighs,\n",
     "nameText": "Одежда / аксессуары",
     "editText": "Одежда, украшения, фетиши",
     "newLine": true,
@@ -38,7 +38,7 @@
   {
     "name": "Внешность персонажа",
     "hint": "Внешность свойственая только этому персонажу",
-    "liveText": "low twintails, (horns of a demon under a mask, white horns:1.4), smooth horns, polished horns, sleek horns, brown hair, absurdly long hair, medium breasts, black demon tail,\n",
+    "liveText": "demon horns, red eyes, slit_pupils, low twintails, (white horns:1.4), smooth horns, polished horns, sleek horns, brown hair, absurdly long hair, medium breasts, black demon tail, thick thighs, thigh gap,\n",
     "nameText": "Внешность персонажа",
     "editText": "Внешность свойственая только этому персонажу",
     "newLine": true,
@@ -56,7 +56,7 @@
   {
     "name": "Действие / поза",
     "hint": "Поза, взаимодействие, выражение лица",
-    "liveText": "holding a large pin,\n",
+    "liveText": "smile, v, squatting, spread_legs,\n",
     "nameText": "Действие / поза",
     "editText": "Поза, взаимодействие, выражение лица",
     "newLine": true,
@@ -65,7 +65,7 @@
   {
     "name": "Фон / окружение",
     "hint": "Комната, пейзаж, окружение",
-    "liveText": "black forest on background, glowing butterflies,\n",
+    "liveText": "\n",
     "nameText": "Фон / окружение",
     "editText": "Комната, пейзаж, окружение",
     "newLine": true,
@@ -74,7 +74,7 @@
   {
     "name": "Атмосфера / освещение",
     "hint": "Настроение, тип освещения",
-    "liveText": "",
+    "liveText": "volumetric lighting,",
     "nameText": "Атмосфера / освещение",
     "editText": "Настроение, тип освещения",
     "newLine": true,
@@ -92,7 +92,7 @@
   {
     "name": "Композиция / ракурс",
     "hint": "Камера, фокус, перспектива",
-    "liveText": "cowboy shot,\n",
+    "liveText": "atmospheric perspective, full_body,\n\n",
     "nameText": "Композиция / ракурс",
     "editText": "Камера, фокус, перспектива",
     "newLine": true,
@@ -101,7 +101,7 @@
   {
     "name": "Качество / разрешение",
     "hint": "Детализация, итоговый вид",
-    "liveText": "masterpiece, best quality, newest, absurdres, highres, new,\n",
+    "liveText": "masterpiece, best quality, amazing quality, very awa, absurdres, newest, very aesthetic, depth of field, highres,\n",
     "nameText": "Качество / разрешение",
     "editText": "Детализация, итоговый вид",
     "newLine": true,
@@ -110,7 +110,7 @@
   {
     "name": "Персонаж",
     "hint": "LORA персонажа",
-    "liveText": "<lora:noel_vtuber_sdxl:1>,\n<lora:Hornet_hollow_knight_Illustrious:0.15>,\n",
+    "liveText": "<lora:noel_vtuber_ILL:0.75>,\n",
     "nameText": "Персонаж",
     "editText": "LORA персонажа",
     "newLine": true,
@@ -137,7 +137,7 @@
   {
     "name": "Пакет из LORA",
     "hint": "Все LORA, что могут использоваться в генерации",
-    "liveText": "<lora:backlitILL:0.6> backlit, backlighting,\n<lora:zy_Detailed_Backgrounds_v1:0.6>,\n<lora:DynamicPoseIL2att_alpha1.0_rank4_noxattn_900steps:1.35> dynamic pose, foreshortening, extreme perspective,\n",
+    "liveText": "<lora:NOOB_vp1_detailer_by_volnovik_v1:0.3>,\n<lora:ponyv6_noobV1_2_adamW:0.3>,\n<lora:LeIsT0_style:0.7>, LeIsT0_illu,\n<lora:wai-A3-V140:1>,\n<lora:SunniiNoob_byKonan:1>,",
     "nameText": "Пакет из LORA",
     "editText": "Все LORA, что могут использоваться в генерации",
     "newLine": true,
@@ -173,7 +173,7 @@
   {
     "name": "ADetailer face positive",
     "hint": "",
-    "liveText": "cute face, perfect face, large red eyes, gradient eyes, slit pupils, blush, open_mouth, teeth, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
+    "liveText": "lazyneg, worst quality, normal quality, anatomical nonsense, bad anatomy, interlocked fingers, extra fingers, watermark, low quality, logo,text, signature, missing fingers, extra fingers, extra toes, missing toes, shiny skin, glistening_clothing, shiny clothes, blurry text, distorted letters, incorrect spelling, latin alphabet, extra words, bad typography, misspelled, stool, armchair, top, 2+monitors, large table, large monitors, (portrait:1.6), cropped head, head out of frame, (oni horns:2.0),",
     "nameText": "ADetailer face positive",
     "editText": "",
     "newLine": true,
