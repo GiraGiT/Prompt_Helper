@@ -1,17 +1,17 @@
 [
   {
     "name": "Общий текст",
-    "hint": "Общий текст для разбивки",
-    "liveText": "Общий текст для разбивки",
+    "hint": "Текст для разбивки по категориям",
+    "liveText": "",
     "nameText": "Общий текст",
-    "editText": "Общий текст для разбивки",
+    "editText": "Текст для разбивки по категориям",
     "newLine": false,
     "includeInPrompt": false
   },
   {
     "name": "Кто",
     "hint": "Тип персонажа, возраст, гендер",
-    "liveText": "1girl, noel vtuber, solo, young,",
+    "liveText": "1girl, noel vtuber, solo, young,\n",
     "nameText": "Кто",
     "editText": "Тип персонажа, возраст, гендер",
     "newLine": true,
@@ -47,7 +47,7 @@
   {
     "name": "Одежда персонажа",
     "hint": "Одежда свойственная только этому персонажу",
-    "liveText": "red bikini top, (mini skirt, blue denim skirt, frilled skirt, fluffy skirt:1.2), blue ribbon of hair bow, red ribbon of hair bow,\n",
+    "liveText": "red bikini top, (mini shorts, blue denim shorts, frilled shorts, fluffy shorts:1.2), heart-shaped cleavage cutout, different legwear, sneakers in different colors, blue ribbon of hair bow, red ribbon of hair bow,\n",
     "nameText": "Одежда персонажа",
     "editText": "Одежда свойственная только этому персонажу",
     "newLine": true,
@@ -65,7 +65,7 @@
   {
     "name": "Фон / окружение",
     "hint": "Комната, пейзаж, окружение",
-    "liveText": "\n",
+    "liveText": "outdoors, field, cloudy_sky, sunflower, sunflower_field, sky, winter, snow, snowing, snowflakes,\n",
     "nameText": "Фон / окружение",
     "editText": "Комната, пейзаж, окружение",
     "newLine": true,
@@ -74,7 +74,7 @@
   {
     "name": "Атмосфера / освещение",
     "hint": "Настроение, тип освещения",
-    "liveText": "volumetric lighting,",
+    "liveText": "volumetric lighting,\n",
     "nameText": "Атмосфера / освещение",
     "editText": "Настроение, тип освещения",
     "newLine": true,
@@ -92,7 +92,7 @@
   {
     "name": "Композиция / ракурс",
     "hint": "Камера, фокус, перспектива",
-    "liveText": "atmospheric perspective, full_body,\n\n",
+    "liveText": "atmospheric perspective, full_body,\n",
     "nameText": "Композиция / ракурс",
     "editText": "Камера, фокус, перспектива",
     "newLine": true,
@@ -110,7 +110,7 @@
   {
     "name": "Персонаж",
     "hint": "LORA персонажа",
-    "liveText": "<lora:noel_vtuber_ILL:0.75>,\n",
+    "liveText": "<lora:noel_vtuber_ILL:0.6>,\n",
     "nameText": "Персонаж",
     "editText": "LORA персонажа",
     "newLine": true,
@@ -146,7 +146,7 @@
   {
     "name": "Negative prompt",
     "hint": "Что исключить",
-    "liveText": "lazyneg, 3D, realistic, low quality, low detail, monochrome, greyscale, artist name, signature, watermark, multiple hands, indoors, (oni horns, short horns, small horns:1.6), (red horns, black horns, wide angle:1.4), blue sky, key light, wool tail, thin tail, legs together, evil smile, shirt, pink skirt, shiny clothes, fat, hip bones, pointy ears, lace-trimmed choker, glowing horns,\n",
+    "liveText": "lazyneg, worst quality, normal quality, anatomical nonsense, bad anatomy, interlocked fingers, extra fingers, watermark, low quality, logo,text, signature, missing fingers, extra fingers, extra toes, missing toes, shiny skin, glistening_clothing, shiny clothes, blurry text, distorted letters, incorrect spelling, latin alphabet, extra words, bad typography, misspelled, stool, armchair, top, 2+monitors, large table, large monitors, (portrait:1.6), cropped head, head out of frame, (oni horns:2.0),",
     "nameText": "Negative prompt",
     "editText": "Что исключить",
     "newLine": true,
@@ -173,7 +173,7 @@
   {
     "name": "ADetailer face positive",
     "hint": "",
-    "liveText": "lazyneg, worst quality, normal quality, anatomical nonsense, bad anatomy, interlocked fingers, extra fingers, watermark, low quality, logo,text, signature, missing fingers, extra fingers, extra toes, missing toes, shiny skin, glistening_clothing, shiny clothes, blurry text, distorted letters, incorrect spelling, latin alphabet, extra words, bad typography, misspelled, stool, armchair, top, 2+monitors, large table, large monitors, (portrait:1.6), cropped head, head out of frame, (oni horns:2.0),",
+    "liveText": "cute face, perfect face, large red eyes, slit pupils, blush, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
     "nameText": "ADetailer face positive",
     "editText": "",
     "newLine": true,
