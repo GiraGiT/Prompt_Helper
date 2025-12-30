@@ -116,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const initAutoResizeAll=()=>{document.querySelectorAll("textarea").forEach(ta=>{ta.removeEventListener("input",ta._autoResizeHandler||(()=>{})); const h=()=>autoResizeTextarea(ta); ta._autoResizeHandler=h; ta.addEventListener("input",h); autoResizeTextarea(ta);});};
 
-
   // ------------------- Insert Tag (replaces token) -------------------
   function insertTagReplacingToken(textarea, tag) {
     const pos = textarea.selectionStart;
@@ -172,8 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let displayTag=t.tag;
         if(q){ const re=new RegExp(`(${escapeRegExp(q)})`,"ig"); displayTag=t.tag.replace(re,'<span class="match">$1</span>');}
         const left=document.createElement("div"); left.className="tag"; left.innerHTML=displayTag;
-        const right=document.createElement("div"); right.className="info"; right.textContent=formatPop(t.popularity)||(t.aliases&&t.aliases[0])||"";
-        item.appendChild(left); item.appendChild(right);
+        const right=document.createElement("div"); right.className="info"; right.textContent=formatPop(t.popularity)||(t.aliases&&t.aliases[0])||"";        item.appendChild(left); item.appendChild(right);
         item.addEventListener("mousedown",ev=>{ev.preventDefault(); insertTagReplacingToken(textarea,currentMatches[idx].tag); hideList(); textarea.dispatchEvent(new Event("input"));});
         list.appendChild(item);
       });
@@ -270,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ------------------- Bracket Validation -------------------
   function checkBrackets(text) {
-    const pairs = { '(': ')', '{': '}', '[': ']', '<': '>', '"': '"' };
+    const pairs = { '(': ')', '{': '}', '[': ']', '<': '>', '"' : '"' };
     const openBrackets = Object.keys(pairs);
     const closeBrackets = Object.values(pairs);
     const stack = [];
@@ -316,9 +314,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ------------------- Render Live Fields -------------------
-  const renderLiveFields=()=>{
+  const renderLiveFields=()=> {
     liveContainer.innerHTML="";
-    fieldsData.forEach(f=>{
+    fieldsData.forEach(f=> {
       const div=document.createElement("div"); div.className="field-live";
       div.innerHTML=`
         <div class="bracket-warning"></div>
@@ -370,7 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ------------------- Render Edit Fields -------------------
-  const renderEditFields=()=>{
+  const renderEditFields=()=> {
     editContainer.innerHTML="";
     const toolbar=document.createElement("div"); toolbar.className="edit-toolbar";
     toolbar.innerHTML=`
@@ -403,9 +401,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const reader=new FileReader();
       reader.onload=()=>{
         try{
-          const imported=JSON.parse(reader.result);
+          const imported = JSON.parse(reader.result);
           if(!Array.isArray(imported)) throw new Error("Неверный формат файла");
-          fieldsData=imported.map(f=>({ name:f.name||"", hint:f.hint||"", liveText:f.liveText||"", nameText:f.nameText||f.name||"", editText:f.editText||f.hint||"", newLine:f.newLine!==undefined?f.newLine:true, includeInPrompt:f.includeInPrompt!==undefined?f.includeInPrompt:true }));
+          fieldsData=imported.map(f=>({
+            name: f.name || "", hint: f.hint || "", liveText: f.liveText || "",
+            nameText: f.nameText || f.name || "", editText: f.editText || f.hint || "",
+            newLine: f.newLine !== undefined ? f.newLine : true,
+            includeInPrompt: f.includeInPrompt !== undefined ? f.includeInPrompt : true
+          }));
           renderEditFields(); renderLiveFields(); updatePrompt(); recordHistoryImmediate();
         } catch(err){ alert("Ошибка при импорте шаблона: "+err.message); }
       };
@@ -413,7 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     wrapper.innerHTML="";
-    fieldsData.forEach((f,index)=>{
+    fieldsData.forEach((f,index)=> {
       const div=document.createElement("div"); div.className="field-edit";
       div.innerHTML=`
         <div class="drag-handle">≡≡≡≡</div>
@@ -458,7 +461,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ------------------- Edit mode toggle -------------------
-  editModeBtn.addEventListener("click",()=>{
+  editModeBtn.addEventListener("click",()=> {
     isEdit=!isEdit;
     editContainer.classList.toggle("hidden",!isEdit);
     liveContainer.classList.toggle("hidden",isEdit);
@@ -481,6 +484,68 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ------------------- Copy button -------------------
   copyBtn.addEventListener("click",()=>{ resultArea.select(); document.execCommand("copy"); });
+
+  // ------------------- Drag & Drop для импорта шаблонов -------------------
+  const dropZone = document.getElementById("drop-zone");
+
+  document.addEventListener("dragover", e => {
+    e.preventDefault();
+    const hasFiles = e.dataTransfer && e.dataTransfer.types &&
+                   (e.dataTransfer.types.includes("Files") ||
+                    e.dataTransfer.types.includes("application/x-moz-file"));
+    if (hasFiles) {
+      dropZone.classList.remove("hidden");
+    }
+  });
+
+  document.addEventListener("dragleave", e => {
+    if (e.relatedTarget === null) {
+      dropZone.classList.add("hidden");
+    }
+  });
+
+  dropZone.addEventListener("dragover", e => {
+    e.preventDefault();
+    dropZone.classList.add("drag-over");
+  });
+
+  dropZone.addEventListener("dragleave", e => {
+    if (!dropZone.contains(e.relatedTarget)) {
+      dropZone.classList.remove("drag-over");
+    }
+  });
+
+  dropZone.addEventListener("drop", e => {
+    e.preventDefault();
+    dropZone.classList.remove("drag-over");
+    dropZone.classList.add("hidden");
+    
+    const files = e.dataTransfer.files;
+    if (files.length === 0) return;
+    
+    const file = files[0];
+    if (!file.name.toLowerCase().endsWith('.json')) {
+      alert("Поддерживаются только файлы формата JSON");
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const imported = JSON.parse(ev.target.result);
+        if (!Array.isArray(imported)) throw new Error("Неверный формат файла");
+        fieldsData = imported.map(f => ({
+          name: f.name || "", hint: f.hint || "", liveText: f.liveText || "",
+          nameText: f.nameText || f.name || "", editText: f.editText || f.hint || "",
+          newLine: f.newLine !== undefined ? f.newLine : true,
+          includeInPrompt: f.includeInPrompt !== undefined ? f.includeInPrompt : true
+        }));
+        renderEditFields(); renderLiveFields(); updatePrompt(); recordHistoryImmediate();
+        localStorage.setItem("promptBuilderFields", JSON.stringify(fieldsData));
+      } catch(err) { alert("Ошибка при импорте шаблона: " + err.message); }
+    };
+    reader.readAsText(file);
+  });
 
   // ------------------- Helpers -------------------
   function escapeHtml(text){ return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"); }

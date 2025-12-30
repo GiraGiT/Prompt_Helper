@@ -1,7 +1,7 @@
 body { background:#202124; color:#fff; font-family:"Segoe UI",sans-serif; padding:20px; }
 h1 { text-align:center; margin-bottom:10px; }
 .desc { text-align:center; color:#bbb; margin-bottom:20px; }
-.builder-container { max-width:900px; margin:0 auto; background:#2a2b30; padding:20px; border-radius:10px; }
+.builder-container { position:relative; max-width:900px; margin:0 auto; background:#2a2b30; padding:20px; border-radius:10px; }
 .toolbar { display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
 button { background:#4caf50; color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; transition:.2s; }
 button:hover { background:#43a047; }
@@ -33,3 +33,11 @@ textarea::placeholder { color:#888; }
 
 #edit-fields-container > div.edit-toolbar { display:flex; width:80%; margin:auto; justify-content:space-around; }
 #edit-fields-wrapper { margin:15px 0 0 0; }
+
+.drop-zone { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(32,33,36,0.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:10; align-items:center; justify-content:center; }
+.drop-zone:not(.hidden) { display:flex; }
+.drop-zone-content { text-align:center; color:#fff; padding:40px; border:3px dashed #4caf50; border-radius:15px; background:rgba(42,43,48,0.9); max-width:400px; transition:all .2s; }
+.drop-icon { font-size:64px; margin-bottom:20px; }
+.drop-zone p { font-size:18px; margin:10px 0; }
+.drop-hint { font-size:14px; color:#aaa; }
+.drop-zone.drag-over .drop-zone-content { border-color:#ffd966; background:rgba(42,43,48,0.95); transform:scale(1.05); }

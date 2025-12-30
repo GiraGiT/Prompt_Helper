@@ -5,7 +5,7 @@
     "liveText": "",
     "nameText": "Общий текст",
     "editText": "Текст для разбивки по категориям",
-    "newLine": false,
+    "newLine": true,
     "includeInPrompt": false
   },
   {
@@ -20,7 +20,7 @@
   {
     "name": "Внешность / стиль",
     "hint": "Цвет волос, глаза, особенности",
-    "liveText": "",
+    "liveText": "blush, fang, glossy lips, parted lips, makeup,\n",
     "nameText": "Внешность / стиль",
     "editText": "Цвет волос, глаза, особенности",
     "newLine": true,
@@ -29,7 +29,7 @@
   {
     "name": "Одежда / аксессуары",
     "hint": "Одежда, украшения, фетиши",
-    "liveText": "blue shorts, black thighhighs, hood, short shorts, shorts, thighhighs,\n",
+    "liveText": "left hand wearing red glove, right hand wearing a blue glove, long_sleeves, detached_sleeves, black sleeves, bare_shoulders,\n",
     "nameText": "Одежда / аксессуары",
     "editText": "Одежда, украшения, фетиши",
     "newLine": true,
@@ -47,7 +47,7 @@
   {
     "name": "Одежда персонажа",
     "hint": "Одежда свойственная только этому персонажу",
-    "liveText": "red bikini top, (mini shorts, blue denim shorts, frilled shorts, fluffy shorts:1.2), heart-shaped cleavage cutout, different legwear, sneakers in different colors, blue ribbon of hair bow, red ribbon of hair bow,\n",
+    "liveText": "red bikini top, (mini shorts, blue denim shorts, frilled shorts, fluffy shorts:1.2), heart-shaped cleavage cutout, different legwear, a pink sock on the left leg, different colors on sneakers, blue ribbon of hair bow, red ribbon of hair bow,\n",
     "nameText": "Одежда персонажа",
     "editText": "Одежда свойственная только этому персонажу",
     "newLine": true,
@@ -56,7 +56,7 @@
   {
     "name": "Действие / поза",
     "hint": "Поза, взаимодействие, выражение лица",
-    "liveText": "smile, v, squatting, spread_legs,\n",
+    "liveText": "sly smirk, hand_up,\n",
     "nameText": "Действие / поза",
     "editText": "Поза, взаимодействие, выражение лица",
     "newLine": true,
@@ -65,7 +65,7 @@
   {
     "name": "Фон / окружение",
     "hint": "Комната, пейзаж, окружение",
-    "liveText": "outdoors, field, cloudy_sky, sunflower, sunflower_field, sky, winter, snow, snowing, snowflakes,\n",
+    "liveText": "outdoors, field, cloudy_sky, sunflower, sunflower_field, sky, winter, snow, snowing, snowflakes, heart, heart_symbol,\n",
     "nameText": "Фон / окружение",
     "editText": "Комната, пейзаж, окружение",
     "newLine": true,
@@ -74,7 +74,7 @@
   {
     "name": "Атмосфера / освещение",
     "hint": "Настроение, тип освещения",
-    "liveText": "volumetric lighting,\n",
+    "liveText": "volumetric lighting, volumetric fog,\n",
     "nameText": "Атмосфера / освещение",
     "editText": "Настроение, тип освещения",
     "newLine": true,
@@ -83,7 +83,7 @@
   {
     "name": "Стилизация / техника",
     "hint": "Аниме стиль, художник, жанр",
-    "liveText": "",
+    "liveText": "pastel_colors, pastel_theme, pastel,\n",
     "nameText": "Стилизация / техника",
     "editText": "Аниме стиль, художник, жанр",
     "newLine": true,
@@ -92,7 +92,7 @@
   {
     "name": "Композиция / ракурс",
     "hint": "Камера, фокус, перспектива",
-    "liveText": "atmospheric perspective, full_body,\n",
+    "liveText": "atmospheric perspective,\n",
     "nameText": "Композиция / ракурс",
     "editText": "Камера, фокус, перспектива",
     "newLine": true,
@@ -137,7 +137,7 @@
   {
     "name": "Пакет из LORA",
     "hint": "Все LORA, что могут использоваться в генерации",
-    "liveText": "<lora:NOOB_vp1_detailer_by_volnovik_v1:0.3>,\n<lora:ponyv6_noobV1_2_adamW:0.3>,\n<lora:LeIsT0_style:0.7>, LeIsT0_illu,\n<lora:wai-A3-V140:1>,\n<lora:SunniiNoob_byKonan:1>,",
+    "liveText": "<lora:NOOB_vp1_detailer_by_volnovik_v1:0.3>,\n\n<lora:ponyv6_noobE11_2_adamW:0.3>,\n<lora:LeIsT0_style:1>, LeIsT0_illu,\n<lora:SunniiNoob_byKonan:1>,\n<lora:s41l0rm00nXLP_r1:1> s41l0rm00n,\n\n<lora:DynamicPoseIL2att_alpha1.0_rank4_noxattn_900steps:1.35>, dynamic pose, foreshortening, extreme perspective,\n\n<lora:wai-A3-V140:1>,",
     "nameText": "Пакет из LORA",
     "editText": "Все LORA, что могут использоваться в генерации",
     "newLine": true,
@@ -146,7 +146,7 @@
   {
     "name": "Negative prompt",
     "hint": "Что исключить",
-    "liveText": "lazyneg, worst quality, normal quality, anatomical nonsense, bad anatomy, interlocked fingers, extra fingers, watermark, low quality, logo,text, signature, missing fingers, extra fingers, extra toes, missing toes, shiny skin, glistening_clothing, shiny clothes, blurry text, distorted letters, incorrect spelling, latin alphabet, extra words, bad typography, misspelled, stool, armchair, top, 2+monitors, large table, large monitors, (portrait:1.6), cropped head, head out of frame, (oni horns:2.0),",
+    "liveText": "lazyneg, worst quality, low quality, displeasing, anatomical nonsense, bad anatomy, interlocked fingers, extra fingers, watermark, low quality, logo,text, signature, missing fingers, extra fingers, extra toes, missing toes, shiny skin, glistening_clothing, shiny clothes, blurry text, distorted letters, incorrect spelling, latin alphabet, extra words, bad typography, misspelled, stool, armchair, top, 2+monitors, large table, large monitors, (portrait:1.6), cropped head, head out of frame, (oni horns:2.0),",
     "nameText": "Negative prompt",
     "editText": "Что исключить",
     "newLine": true,
@@ -173,7 +173,7 @@
   {
     "name": "ADetailer face positive",
     "hint": "",
-    "liveText": "cute face, perfect face, large red eyes, slit pupils, blush, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
+    "liveText": "cute face, perfect face, large red eyes, slit pupils, blush, sly smirk, fang, glossy lips, parted lips, makeup, <lora:DetailedEyes_V3:1>,",
     "nameText": "ADetailer face positive",
     "editText": "",
     "newLine": true,

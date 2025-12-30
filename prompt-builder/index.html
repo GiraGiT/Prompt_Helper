@@ -3,13 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <title>🧠 Prompt Builder</title>
-<link rel="stylesheet" href="style.css?v=2.1">
+<link rel="stylesheet" href="style.css?v=2.2">
 </head>
 <body>
 <h1>🧠 Prompt Builder</h1>
 <p class="desc">Заполняйте поля для генерации промпта. Нажмите "Редактировать поля", чтобы управлять структурой и содержимым.</p>
 
 <div class="builder-container">
+  <div id="drop-zone" class="drop-zone hidden">
+    <div class="drop-zone-content">
+      <div class="drop-icon">📂</div>
+      <p>Перетащите файл шаблона сюда</p>
+      <p class="drop-hint">Поддерживается формат JSON</p>
+    </div>
+  </div>
+
   <div class="toolbar">
     <button id="edit-mode-btn">✏️ Редактировать поля</button>
     <button id="copy-btn">📋 Копировать результат</button>
@@ -26,6 +34,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<script src="script.js?v=2.1"></script>
+<script src="script.js?v=2.2"></script>
 </body>
 </html>
