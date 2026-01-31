@@ -360,7 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(!f.liveText || !f.includeInPrompt) return;
       const lines = f.liveText.split(/\r?\n/).map(l => l.trim());
       const processedLines = lines.map(l => l ? (l.endsWith(",") ? l : l + ",") : "");
-      if(f.newLine) result += processedLines.join("\n") + "\n";
+      if(f.newLine) result += processedLines.join("\n") + "\n\n";
       else result += processedLines.join(" ") + " ";
     });
     resultArea.value = result.trim();
